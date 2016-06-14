@@ -1,7 +1,9 @@
 sudo
 =========
 
-[![Build Status](https://travis-ci.org/tomashavlas/ansible-role-sudo.svg?branch=master)](https://travis-ci.org/tomashavlas/ansible-role-sudo/)
+[![Ansible Galaxy][galaxy_image]][galaxy_link]
+[![Build Status][travis_image]][travis_link]
+[![Latest Tag][tag_image]][tag_link]
 
 An [Ansible](https://www.ansible.com/) role to install [sudo](https://www.sudo.ws/) and manage sudoers configuration - defaults, aliases, and specifications.
 
@@ -143,3 +145,10 @@ Author Information
 ------------------
 
 Created by [Tomáš Havlas](https://github.com/tomashavlas) in 2016.
+
+[galaxy_image]: https://img.shields.io/badge/galaxy-tomashavlas.sudo-blue.svg?style=flat
+[galaxy_link]: https://galaxy.ansible.com/tomashavlas/sudo/
+[tag_image]: https://img.shields.io/github/tag/tomashavlas/ansible-role-sudo.svg
+[tag_link]: https://github.com/tomashavlas/ansible-role-sudo/tags
+[travis_image]: https://travis-ci.org/tomashavlas/ansible-role-sudo.svg?branch=master
+[travis_link]: https://travis-ci.org/tomashavlas/ansible-role-sudo/
