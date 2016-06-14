@@ -21,6 +21,7 @@ install:
   - sudo pip install docker-py
   - sudo pip install ansible
   - ansible --version
+  - ansible-galaxy install -r tests/requirements.yml -p tests/roles/
 
 script:
   - cd tests && make
