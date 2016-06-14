@@ -1,0 +1,24 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: 'Tomáš Havlas'
+  description: 'Install sudo and manage defaults, aliases and sudoers.'
+  company: 'Raven Systems'
+  issue_tracker_url: 'https://github.com/tomashavlas/ansible-role-sudo/issues'
+  license: 'BSD'
+  min_ansible_version: 1.7
+  github_branch: 'master'
+  platforms:
+  - name: Debian
+    versions:
+      - jessie
+  - name: EL
+    versions:
+      - 7
+  - name: Fedora
+    versions:
+      - 23
+  galaxy_tags:
+    - 'sudo'
+    - 'sudoers'

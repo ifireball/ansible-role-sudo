@@ -1,0 +1,8 @@
+---
+sudo__conf_file: '/etc/sudoers'
+sudo__confd_dir: '/etc/sudoers.d'
+
+__sudo__iolog_dir: '/var/log/sudo-io'
+__sudo__iolog_filename: '%{seq}'
+__sudo__packages:
+  - 'sudo'

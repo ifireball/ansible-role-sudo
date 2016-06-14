@@ -1,0 +1,19 @@
+---
+- name: Find all existing sudo specs files
+  shell: 'ls -1 "{{ sudo__confd_dir }}" || true'
+  register: sudo___confd_present
+  changed_when: False
+  always_run: True
+
+- name: Find all managed sudo specs files
+  set_fact:
+    sudo___confd_managed: '{{ sudo__specs | map(attribute="name") | list }}'
+  changed_when: False
+  always_run: True
+
+- name: Purge unmanaged sudo specs files
+  file:
+    path: '{{ sudo__confd_dir }}/{{ item }}'
+    state: 'absent'
+  with_items: '{{ sudo___confd_present.stdout_lines }}'
+  when: item not in sudo___confd_managed

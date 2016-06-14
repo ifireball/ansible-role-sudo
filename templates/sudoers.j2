@@ -1,0 +1,35 @@
+## {{ ansible_managed }}
+
+## Defaults specification
+{% for default in sudo__defaults %}
+{% if default.value is defined and default.value %}
+Defaults {{ default.name|string }} {{ '+' if default.include is defined and default.include|bool else ('-' if default.exclude is defined and default.exclude|bool else '') }}= {{ default.value|string if (default.value is string or default.value is not iterable) else '"' + default.value|join(' ') + '"' }}
+{% else %}
+Defaults {{ default.name|string }}
+{% endif %}
+{% endfor %}
+
+
+## Host Aliases
+{% for alias in sudo__host_aliases %}
+Host_Alias {{ alias.name|string }} = {{ alias.host|string if (alias.host is string or alias.host is not iterable) else alias.host|join(',') }}
+{% endfor %}
+
+## User Aliases
+{% for alias in sudo__user_aliases %}
+User_Alias {{ alias.name|string }} = {{ alias.user|string if (alias.user is string or alias.user is not iterable) else alias.user|join(',') }}
+{% endfor %}
+
+## Command Aliases
+{% for alias in sudo__cmnd_aliases %}
+Cmnd_Alias {{ alias.name|string }} = {{ alias.command|string if (alias.command is string or alias.command is not iterable) else alias.command|join(',') }}
+{% endfor %}
+
+## Runas Aliases
+{% for alias in sudo__runas_aliases %}
+Runas_Alias {{ alias.name|string }} = {{ alias.operator|string if (alias.operator is string or alias.operator is not iterable) else alias.operator|join(',') }}
+{% endfor %}
+
+
+## Read drop-in files from {{ sudo__confd_dir|string }}
+#includedir {{ sudo__confd_dir|string }}

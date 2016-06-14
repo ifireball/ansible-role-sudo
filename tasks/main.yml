@@ -1,0 +1,4 @@
+---
+- include: 'init.yml'
+- include: 'setup.yml'
+- include: 'configure.yml'

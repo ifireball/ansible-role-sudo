@@ -1,0 +1,7 @@
+## Ansible managed
+
+## User specification
+tuser thost=(toperator) NOPASSWD: ALL
+tuser thost=/bin/test
+tuser thost=NOPASSWD: /bin/test
+tuser thost=(toperator) /bin/test

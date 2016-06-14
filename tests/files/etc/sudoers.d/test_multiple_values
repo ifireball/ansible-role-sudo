@@ -1,0 +1,4 @@
+## Ansible managed
+
+## User specification
+tuser1,tuser2,tuser3 thost1,thost2,thost3=(toperator1,toperator2,toperator3) NOPASSWD:NOEXEC: /bin/test1,/bin/test2,/bin/test3

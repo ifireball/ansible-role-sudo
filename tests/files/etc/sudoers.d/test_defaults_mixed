@@ -1,0 +1,11 @@
+## Ansible managed
+
+## Defaults specification
+Defaults@thost !authenticate
+Defaults:tuser !authenticate
+Defaults!/bin/test !authenticate
+Defaults>toperator !authenticate
+Defaults !visiblepw
+
+## User specification
+tuser thost=(toperator) NOPASSWD: ALL

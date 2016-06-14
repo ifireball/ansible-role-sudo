@@ -1,0 +1,38 @@
+## Ansible managed
+
+## Defaults specification
+Defaults env_reset
+Defaults !visiblepw
+Defaults secure_path = /sbin:/bin:/usr/sbin:/usr/bin
+Defaults timestamp_timeout = 30
+Defaults env_keep = "LANGUAGE LINGUAS"
+Defaults env_keep = "LANG LC_ALL"
+Defaults env_keep -= LC_IDENTIFICATION
+Defaults env_keep -= "LC_MEASUREMENT LC_MONETARY"
+Defaults env_keep += LC_TIME
+Defaults env_keep += "LANGUAGE LINGUAS"
+Defaults timestamp_timeout = "30"
+Defaults authenticate
+Defaults !insults
+Defaults env_keep += LC_COLLATE
+
+
+## Host Aliases
+Host_Alias HOST_TEST = test
+Host_Alias HOST_TEST_MULTIPLE = test1,127.0.0.2,127.0.0.0/24,127.0.0.0/255.255.255.0,HOST_TEST
+
+## User Aliases
+User_Alias USER_TEST = test
+User_Alias USER_TEST_MULTIPLE = test1,test2,test3,USER_TEST
+
+## Command Aliases
+Cmnd_Alias CMND_TEST = /bin/test
+Cmnd_Alias CMND_TEST_MULTIPLE = /bin/test1,/bin/test2,/bin/test3,CMND_TEST
+
+## Runas Aliases
+Runas_Alias RUNAS_TEST = test
+Runas_Alias RUNAS_TEST_MULTIPLE = test1,test2,test3,RUNAS_TEST
+
+
+## Read drop-in files from /etc/sudoers.d
+#includedir /etc/sudoers.d
