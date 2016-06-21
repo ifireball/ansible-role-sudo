@@ -1,6 +1,9 @@
 all: main
 
-main: syntaxcheck
+main:
+	# syntax check
+	ansible-playbook main.yml -i inventory --syntax-check
+
 	# functional test
 	ansible-playbook main.yml -i inventory -e "provision_docker__container_state=reloaded" --skip-tags=acceptance-test
 
@@ -14,9 +17,6 @@ main: syntaxcheck
 	# acceptance test
 	ansible-playbook main.yml -i inventory --tags=initialize-docker,acceptance-test
 
-syntaxcheck:
-	# syntax check
-	ansible-playbook main.yml -i inventory --syntax-check
 
 cleanup:
 	# remove docker containers
