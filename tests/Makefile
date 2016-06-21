@@ -17,3 +17,7 @@ main: syntaxcheck
 syntaxcheck:
 	# syntax check
 	ansible-playbook main.yml -i inventory --syntax-check
+
+cleanup:
+	# remove docker containers
+	ansible-playbook main.yml -i inventory -e "provision_docker__container_state=absent" --tags=initialize-docker
