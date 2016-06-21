@@ -2,7 +2,7 @@
 - name: Initialize test docker containers
   hosts: localhost
   roles:
-    - role: provision_docker
+    - role: 'provision_docker'
       provision_docker__inventory:
         - name: 'test_sudo_main_centos7'
           image: 'tomashavlas/ansible-test:centos7'
@@ -20,18 +20,16 @@
         timeout: 30
         connect_timeout: 30
       with_items: '{{ provision_docker__inventory }}'
-  tags:
-    - 'initialize_docker'
+  tags: [ 'initialize-docker' ]
 
 - name: Run sudo role basic test scenario
   hosts: provision_docker__containers
-  remote_user: root
+  remote_user: 'root'
   pre_tasks:
     - name: Include OS specific variables
       include_vars: '../vars/{{ ansible_os_family }}.yml'
-      tags:
-        - 'pretest'
-    - name: Create \"remove me\" test directory
+      tags: [ 'pre-test' ]
+    - name: Create "remove me" test directory
       file:
         path: '{{ sudo__confd_dir }}/test_remove_me_dir'
         owner: 'root'
@@ -39,9 +37,8 @@
         mode: 0550
         state: 'directory'
       changed_when: False
-      tags:
-        - 'pretest'
-    - name: Create \"remove me\" test file
+      tags: [ 'pre-test' ]
+    - name: Create "remove me" test file
       copy:
         content: 'remove me'
         dest: '{{ sudo__confd_dir }}/test_remove_me_file'
@@ -49,13 +46,11 @@
         group: 'root'
         mode: 0440
       changed_when: False
-      tags:
-        - 'pretest'
+      tags: [ 'pre-test' ]
   post_tasks:
     - name: Include OS specific variables
       include_vars: '../vars/{{ ansible_os_family }}.yml'
-      tags:
-        - 'acceptance_test'
+      tags: [ 'acceptance-test' ]
     - name: Copy acceptance test files into docker containers
       copy:
         src: 'files/'
@@ -64,8 +59,8 @@
         group: 'root'
         mode: 0440
         directory_mode: 0550
-      tags:
-        - 'acceptance_test'
+      changed_when: False
+      tags: [ 'acceptance-test' ]
     - name: Test sudo configuration files
       shell: 'bash -c "diff <(tail -n +2 {{ item }}) <(tail -n +2 /tmp/tests{{ item }})"'
       changed_when: False
@@ -76,8 +71,7 @@
         - '{{ sudo__confd_dir }}/test_example_playbook_wheel'
         - '{{ sudo__confd_dir }}/test_multiple_values'
         - '{{ sudo__confd_dir }}/test_single_value'
-      tags:
-        - 'acceptance_test'
+      tags: [ 'acceptance-test' ]
     - name: Test for purged files from sudo dropins directory
       file:
         path: '{{ item }}'
@@ -85,10 +79,12 @@
       with_items:
         - '{{ sudo__confd_dir }}/test_remove_me_dir'
         - '{{ sudo__confd_dir }}/test_remove_me_file'
-      tags:
-        - 'acceptance_test'
+      register: 'test_result'
+      failed_when: ((test_result.failed is defined and test_result.failed) or
+                    (test_result.changed is defined and test_result.changed))
+      tags: [ 'acceptance-test' ]
   roles:
-      - role: sudo
+      - role: 'sudo'
         sudo__defaults:
 # test boolean default
           - name: 'env_reset'
