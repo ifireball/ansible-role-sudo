@@ -18,6 +18,6 @@ main:
 	ansible-playbook main.yml -i inventory --tags=initialize-docker,acceptance-test
 
 
-cleanup:
+cleanall:
 	# remove docker containers
 	ansible-playbook main.yml -i inventory -e "provision_docker__container_state=absent" --tags=initialize-docker
