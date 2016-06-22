@@ -9,7 +9,7 @@
     validate: 'visudo -cf %s'
   with_items: '{{ sudo__specs }}'
   when: ((item.name is defined and item.name) and
-         (item.enabled is not defined or item.enabled | bool) and
+         (item.enabled is not defined or item.enabled|bool) and
          (item.defaults is defined or item.specs is defined))
 
 - name: Remove sudo specs files
@@ -18,10 +18,10 @@
     state: 'absent'
   with_items: '{{ sudo__specs }}'
   when: ((item.name is defined and item.name) and
-         (not item.enabled | bool))
+         (not item.enabled|bool))
 
 - include: 'purge-unmanaged-specs.yml'
-  when: sudo__specs_purge_unmanaged | bool
+  when: (sudo__specs_purge_unmanaged|bool)
 
 - name: Configure and update defaults and aliases in sudoers file
   template:
