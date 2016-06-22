@@ -136,6 +136,8 @@ Example Playbook
               command: 'ALL'
 ```
 
+For more examples see [test cases](https://github.com/tomashavlas/ansible-role-sudo/tree/master/tests).
+
 License
 -------
 
