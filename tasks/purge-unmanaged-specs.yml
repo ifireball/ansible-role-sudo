@@ -7,7 +7,7 @@
 
 - name: Find all managed sudo specs files
   set_fact:
-    sudo___confd_managed: '{{ sudo__specs | map(attribute="name") | list }}'
+    sudo___confd_managed: '{{ sudo__specs|map(attribute="name")|list }}'
   changed_when: False
   always_run: True
 
