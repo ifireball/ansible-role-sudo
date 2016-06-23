@@ -80,8 +80,7 @@
         - '{{ sudo__confd_dir }}/test_remove_me_dir'
         - '{{ sudo__confd_dir }}/test_remove_me_file'
       register: 'test_result'
-      failed_when: ((test_result.failed is defined and test_result.failed) or
-                    (test_result.changed is defined and test_result.changed))
+      failed_when: (test_result|failed or test_result|changed)
       tags: [ 'acceptance-test' ]
   roles:
       - role: 'sudo'
