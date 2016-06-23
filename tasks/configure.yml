@@ -8,7 +8,7 @@
     mode: 0440
     validate: 'visudo -cf %s'
   with_items: '{{ sudo__specs }}'
-  when: ((item.name is defined and item.name) and
+  when: ((item.name is defined and item.name|trim) and
          (item.enabled is not defined or item.enabled|bool) and
          (item.defaults is defined or item.specs is defined))
 
@@ -17,7 +17,7 @@
     path: '{{ sudo__confd_dir }}/{{ item.name }}'
     state: 'absent'
   with_items: '{{ sudo__specs }}'
-  when: ((item.name is defined and item.name) and
+  when: ((item.name is defined and item.name|trim) and
          (not item.enabled|bool))
 
 - include: 'purge-unmanaged-specs.yml'

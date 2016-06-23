@@ -10,6 +10,9 @@ Unreleased
 - Added `bool` filter to boolean variables in conditions.
   [tomashavlas]
 
+- Added `trim` filter when checking for non-empty variables in conditions.
+  [tomashavlas]
+
 v1.0
 ----
 
