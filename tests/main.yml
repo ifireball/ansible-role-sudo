@@ -1,5 +1,5 @@
 ---
-- name: Initialize test docker containers
+- name: Test Scenario - initialize test docker containers
   hosts: localhost
   roles:
     - role: 'provision_docker'
@@ -22,14 +22,14 @@
       with_items: '{{ provision_docker__inventory }}'
   tags: [ 'initialize-docker' ]
 
-- name: Run sudo role basic test scenario
+- name: Test Scenario - basic tests scenario
   hosts: provision_docker__containers
   remote_user: 'root'
   pre_tasks:
-    - name: Include OS specific variables
+    - name: Pre-Test - include OS specific variables
       include_vars: '../vars/{{ ansible_os_family }}.yml'
       tags: [ 'pre-test' ]
-    - name: Create "remove me" test directory
+    - name: Pre-Test - create "remove me" test directory
       file:
         path: '{{ sudo__confd_dir }}/test_remove_me_dir'
         owner: 'root'
@@ -38,7 +38,7 @@
         state: 'directory'
       changed_when: False
       tags: [ 'pre-test' ]
-    - name: Create "remove me" test file
+    - name: Pre-Test - create "remove me" test file
       copy:
         content: 'remove me'
         dest: '{{ sudo__confd_dir }}/test_remove_me_file'
@@ -48,10 +48,10 @@
       changed_when: False
       tags: [ 'pre-test' ]
   post_tasks:
-    - name: Include OS specific variables
+    - name: Acceptance Test - include OS specific variables
       include_vars: '../vars/{{ ansible_os_family }}.yml'
       tags: [ 'acceptance-test' ]
-    - name: Copy acceptance test files into docker containers
+    - name: Acceptance Test - copy acceptance test files into docker containers
       copy:
         src: 'files/'
         dest: '/tmp/tests/'
@@ -61,7 +61,7 @@
         directory_mode: 0550
       changed_when: False
       tags: [ 'acceptance-test' ]
-    - name: Test sudo configuration files
+    - name: Acceptance Test - validate sudo configuration files
       shell: 'bash -c "diff <(tail -n +2 {{ item }}) <(tail -n +2 /tmp/tests{{ item }})"'
       changed_when: False
       with_items:
@@ -73,7 +73,7 @@
         - '{{ sudo__confd_dir }}/test_not_disabled'
         - '{{ sudo__confd_dir }}/test_single_value'
       tags: [ 'acceptance-test' ]
-    - name: Test for purged files from sudo dropins directory
+    - name: Acceptance Test - validate purged files from sudo dropins directory
       file:
         path: '{{ item }}'
         state: 'absent'
