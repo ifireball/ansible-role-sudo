@@ -1,5 +1,5 @@
 ---
-- name: Test Scenario - initialize test docker containers
+- name: Pre-Test Scenario - initialize test docker containers
   hosts: localhost
   roles:
     - role: 'provision_docker'
@@ -22,7 +22,7 @@
       with_items: '{{ provision_docker__inventory }}'
   tags: [ 'initialize-docker' ]
 
-- name: Test Scenario - basic tests scenario
+- name: Test Scenario 1 - basic functionality
   hosts: provision_docker__containers
   remote_user: 'root'
   pre_tasks:
@@ -38,7 +38,7 @@
     - name: Pre-Test - create sample test file
       copy:
         content: 'tuser thost=(toperator) NOPASSWD: ALL'
-        dest: '{{ sudo__confd_dir }}/sample_file'
+        dest: '{{ sudo__confd_dir }}/t1_sample_file'
         owner: 'root'
         group: 'root'
         mode: 0440
@@ -47,33 +47,37 @@
   post_tasks:
     - name: Acceptance Test - copy acceptance test files into docker containers
       copy:
-        src: 'files/'
-        dest: '/tmp/tests/'
+        src: 'files/acceptance-tests/'
+        dest: '/tmp/acceptance-tests/'
         owner: 'root'
         group: 'root'
         mode: 0440
         directory_mode: 0550
       changed_when: False
       tags: [ 'acceptance-test' ]
-    - name: Acceptance Test - validate configuration files
-      shell: 'bash -c "diff <(tail -n +2 {{ item }}) <(tail -n +2 /tmp/tests{{ item }})"'
+    - name: Acceptance Test - validate main configuration file
+      shell: 'bash -c "diff <(tail -n +2 {{ sudo__conf_file }}) <(tail -n +2 /tmp/acceptance-tests/t1/sudoers)"'
+      changed_when: False
+      tags: [ 'acceptance-test' ]
+    - name: Acceptance Test - validate dropins configuration files
+      shell: 'bash -c "diff <(tail -n +2 {{ sudo__confd_dir }}/{{ item }}) <(tail -n +2 /tmp/acceptance-tests/t1/{{ item }})"'
       changed_when: False
       with_items:
-        - '{{ sudo__conf_file }}'
-        - '{{ sudo__confd_dir }}/test_defaults'
-        - '{{ sudo__confd_dir }}/test_defaults_mixed'
-        - '{{ sudo__confd_dir }}/test_example_playbook_wheel'
-        - '{{ sudo__confd_dir }}/test_multiple_values'
-        - '{{ sudo__confd_dir }}/test_not_disabled'
-        - '{{ sudo__confd_dir }}/test_single_value'
+        - 't1_sample_file'
+        - 't1_test_defaults'
+        - 't1_test_defaults_mixed'
+        - 't1_test_example_playbook_wheel'
+        - 't1_test_multiple_values'
+        - 't1_test_not_disabled'
+        - 't1_test_single_value'
       tags: [ 'acceptance-test' ]
     - name: Acceptance Test - validate disabled configuration files
       file:
         path: '{{ item }}'
         state: 'absent'
       with_items:
-        - '{{ sudo__confd_dir }}/test_disabled'
-        - '{{ sudo__confd_dir }}/test_empty'
+        - '{{ sudo__confd_dir }}/t1_test_disabled'
+        - '{{ sudo__confd_dir }}/t1_test_empty'
       register: 'test_result'
       failed_when: (test_result|failed or test_result|changed)
       tags: [ 'acceptance-test' ]
@@ -202,7 +206,7 @@
 
         sudo__specs:
 # test single value specifications
-          - name: 'test_single_value'
+          - name: 't1_test_single_value'
             specs:
 # test with all values set
               - user: 'tuser'
@@ -226,7 +230,7 @@
                 command: '/bin/test'
 
 # test multiple values specifications
-          - name: 'test_multiple_values'
+          - name: 't1_test_multiple_values'
             specs:
               - user:
                   - 'tuser1'
@@ -249,7 +253,7 @@
                   - '/bin/test3'
 
 # test standalone defaults in specification file
-          - name: 'test_defaults'
+          - name: 't1_test_defaults'
             defaults:
 # test global boolean default
               - name: 'compress_io'
@@ -301,7 +305,7 @@
                 command: '/bin/test'
 
 # test defaults mixed with specifications
-          - name: 'test_defaults_mixed'
+          - name: 't1_test_defaults_mixed'
             defaults:
               - name: '!authenticate'
                 user: 'tuser'
@@ -317,22 +321,22 @@
                 command: 'ALL'
 
 # test empty definition
-          - name: 'test_empty'
+          - name: 't1_test_empty'
 
 # test disabled definition
-          - name: 'test_disabled'
+          - name: 't1_test_disabled'
             disabled: True
             defaults:
               - name: '!visiblepw'
 
 # test not disabled definition
-          - name: 'test_not_disabled'
+          - name: 't1_test_not_disabled'
             disabled: False
             defaults:
               - name: '!visiblepw'
 
 # test example playbook specification
-          - name: 'test_example_playbook_wheel'
+          - name: 't1_test_example_playbook_wheel'
             specs:
               - user: '%wheel'
                 host: 'ALL'
