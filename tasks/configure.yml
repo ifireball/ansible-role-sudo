@@ -20,7 +20,7 @@
   when: ((item.name is defined and item.name|trim) and
          (item.disabled is defined and item.disabled|bool))
 
-- include: 'purge-unmanaged-specs.yml'
+- include: 'purge_unmanaged_specs.yml'
   when: (sudo__specs_purge_unmanaged|bool)
 
 - name: Configure and update defaults and aliases in sudoers file
