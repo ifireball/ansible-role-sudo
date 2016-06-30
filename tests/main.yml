@@ -70,6 +70,7 @@
         - '{{ sudo__confd_dir }}/test_defaults_mixed'
         - '{{ sudo__confd_dir }}/test_example_playbook_wheel'
         - '{{ sudo__confd_dir }}/test_multiple_values'
+        - '{{ sudo__confd_dir }}/test_not_disabled'
         - '{{ sudo__confd_dir }}/test_single_value'
       tags: [ 'acceptance-test' ]
     - name: Test for purged files from sudo dropins directory
@@ -77,6 +78,8 @@
         path: '{{ item }}'
         state: 'absent'
       with_items:
+        - '{{ sudo__confd_dir }}/test_disabled'
+        - '{{ sudo__confd_dir }}/test_empty'
         - '{{ sudo__confd_dir }}/test_remove_me_dir'
         - '{{ sudo__confd_dir }}/test_remove_me_file'
       register: 'test_result'
@@ -322,15 +325,17 @@
                 command: 'ALL'
 
 # test empty definition
-          - name: 'test_no_attribs'
-
-# test empty enabled definition
-          - name: 'test_empty_file'
-            enabled: True
+          - name: 'test_empty'
 
 # test disabled definition
           - name: 'test_disabled'
-            enabled: False
+            disabled: True
+            defaults:
+              - name: '!visiblepw'
+
+# test not disabled definition
+          - name: 'test_not_disabled'
+            disabled: False
             defaults:
               - name: '!visiblepw'
 

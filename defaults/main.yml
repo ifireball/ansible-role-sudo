@@ -43,8 +43,6 @@ sudo__user_aliases: []
 sudo__specs: []
 ## filename of sudo specification file
 #  - name: string
-## OPTIONAL: if set to False specification file is removed form host, defaults to True
-#    enabled: bool
 ## OPTIONAL: list of sudo defaults, if command, host, operator, and user option are not set, then sudo default is
 ## recognized as global
 #    defaults:
@@ -77,6 +75,8 @@ sudo__specs: []
 #        tag: string | [ string ]
 ## specification command(s), mutiple values are concatenated with comma
 #        command: string | [ string ]
+## OPTIONAL: if set to True, file is removed from host
+#    disabled: bool
 
 # if set to True all files located in sudo configuration dropins directory not created by this role are removed
 sudo__specs_purge_unmanaged: False

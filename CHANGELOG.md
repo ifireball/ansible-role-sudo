@@ -25,6 +25,9 @@ Unreleased
 - Refactored template files to more readable state.
   [tomashavlas]
 
+- Replaced `enabled` option, with `disabled` option to honor pattern used in other roles.
+  [tomashavlas]
+
 v1.0
 ----
 
