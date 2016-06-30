@@ -17,5 +17,3 @@ Defaults:tuser !visiblepw
 Defaults@thost !visiblepw
 Defaults>toperator !visiblepw
 Defaults!/bin/test !visiblepw
-
-## User specification

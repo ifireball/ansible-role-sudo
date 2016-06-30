@@ -1,54 +1,135 @@
+#jinja2:trim_blocks: False
 ## {{ ansible_managed }}
-
 {% if item.defaults is defined %}
 ## Defaults specification
-{% for default in item.defaults %}
-{# Global defaults specification #}
-{% if default.host is undefined and default.user is undefined and default.command is undefined and default.operator is undefined %}
-{% if default.value is defined and default.value %}
-Defaults {{ default.name|string }} {{ '+' if default.include is defined and default.include|bool else ('-' if default.exclude is defined and default.exclude|bool else '') }}= {{ default.value|string if (default.value is string or default.value is not iterable) else '"' + default.value|join(' ') + '"' }}
-{% else %}
-Defaults {{ default.name|string }}
-{% endif %}
-{% endif %}
-{# Host conditioned defaults specification #}
-{% if default.host is defined and default.host %}
-{% if default.value is defined and default.value %}
-Defaults@{{ default.host|string if (default.host is string or default.host is not iterable) else default.host|join(',') }} {{ default.name|string }} {{ '+' if default.include is defined and default.include|bool else ('-' if default.exclude is defined and default.exclude|bool else '') }}= {{ default.value|string if (default.value is string or default.value is not iterable) else '"' + default.value|join(' ') + '"' }}
-{% else %}
-Defaults@{{ default.host|string if (default.host is string or default.host is not iterable) else default.host|join(',') }} {{ default.name|string }}
-{% endif %}
-{% endif %}
-{# User conditioned defaults specification #}
-{% if default.user is defined and default.user %}
-{% if default.value is defined and default.value %}
-Defaults:{{ default.user|string if (default.user is string or default.user is not iterable) else default.user|join(',') }} {{ default.name|string }} {{ '+' if default.include is defined and default.include|bool else ('-' if default.exclude is defined and default.exclude|bool else '') }}= {{ default.value|string if (default.value is string or default.value is not iterable) else '"' + default.value|join(' ') + '"' }}
-{% else %}
-Defaults:{{ default.user|string if (default.user is string or default.user is not iterable) else default.user|join(',') }} {{ default.name|string }}
-{% endif %}
-{% endif %}
-{# Command conditioned defaults specification #}
-{% if default.command is defined and default.command %}
-{% if default.value is defined and default.value %}
-Defaults!{{ default.command|string if (default.command is string or default.command is not iterable) else default.command|join(',') }} {{ default.name|string }} {{ '+' if default.include is defined and default.include|bool else ('-' if default.exclude is defined and default.exclude|bool else '') }}= {{ default.value|string if (default.value is string or default.value is not iterable) else '"' + default.value|join(' ') + '"' }}
-{% else %}
-Defaults!{{ default.command|string if (default.command is string or default.command is not iterable) else default.command|join(',') }} {{ default.name|string }}
-{% endif %}
-{% endif %}
-{# Operator conditioned defaults specification #}
-{% if default.operator is defined and default.operator %}
-{% if default.value is defined and default.value %}
-Defaults>{{ default.operator|string if (default.operator is string or default.operator is not iterable) else default.operator|join(',') }} {{ default.name|string }} {{ '+' if default.include is defined and default.include|bool else ('-' if default.exclude is defined and default.exclude|bool else '') }}= {{ default.value|string if (default.value is string or default.value is not iterable) else '"' + default.value|join(' ') + '"' }}
-{% else %}
-Defaults>{{ default.operator|string if (default.operator is string or default.operator is not iterable) else default.operator|join(',') }} {{ default.name|string }}
-{% endif %}
-{% endif %}
-{% endfor %}
+{% for default in item.defaults -%}
+{#- Global defaults specification -#}
+{%- if default.host is undefined and default.user is undefined and default.command is undefined and default.operator is undefined -%}
+    Defaults {{ default.name|string }}
+    {%- if default.value is defined and default.value -%}
+        {{ ' ' }}{% if default.include is defined and default.include|bool %}+{% elif default.exclude is defined and default.exclude|bool %}-{% endif %}={{ ' ' }}
+        {%- if default.value is not iterable or default.value is string -%}
+            {{ default.value|string }}
+        {%- else -%}
+            "{{  default.value|join(' ') }}"
+        {%- endif -%}
+    {%- endif %}
+{% endif -%}
 
-{% endif %}
+{#- Host conditioned defaults specification -#}
+{%- if default.host is defined and default.host -%}
+    Defaults@
+    {%- if default.host is not iterable or default.host is string -%}
+        {{ default.host|string }}
+    {%- else -%}
+        {{ default.host|join(',') }}
+    {%- endif -%}
+    {{ ' ' }}{{ default.name|string }}
+    {%- if default.value is defined and default.value -%}
+        {{ ' ' }}{% if default.include is defined and default.include|bool %}+{% elif default.exclude is defined and default.exclude|bool %}-{% endif %}={{ ' ' }}
+        {%- if default.value is not iterable or default.value is string -%}
+            {{ default.value|string }}
+        {%- else -%}
+            "{{  default.value|join(' ') }}"
+        {%- endif -%}
+    {%- endif %}
+{% endif -%}
+
+{#- User conditioned defaults specification -#}
+{%- if default.user is defined and default.user -%}
+    Defaults:
+    {%- if default.user is not iterable or default.user is string -%}
+        {{ default.user|string }}
+    {%- else -%}
+        {{ default.user|join(',') }}
+    {%- endif -%}
+    {{ ' ' }}{{ default.name|string }}
+    {%- if default.value is defined and default.value -%}
+        {{ ' ' }}{% if default.include is defined and default.include|bool %}+{% elif default.exclude is defined and default.exclude|bool %}-{% endif %}={{ ' ' }}
+        {%- if default.value is not iterable or default.value is string -%}
+            {{ default.value|string }}
+        {%- else -%}
+            "{{  default.value|join(' ') }}"
+        {%- endif -%}
+    {%- endif %}
+{% endif -%}
+
+{#- Command conditioned defaults specification -#}
+{%- if default.command is defined and default.command -%}
+    Defaults!
+    {%- if default.command is not iterable or default.command is string -%}
+        {{ default.command|string }}
+    {%- else -%}
+        {{ default.command|join(',') }}
+    {%- endif -%}
+    {{ ' ' }}{{ default.name|string }}
+    {%- if default.value is defined and default.value -%}
+        {{ ' ' }}{% if default.include is defined and default.include|bool %}+{% elif default.exclude is defined and default.exclude|bool %}-{% endif %}={{ ' ' }}
+        {%- if default.value is not iterable or default.value is string -%}
+            {{ default.value|string }}
+        {%- else -%}
+            "{{  default.value|join(' ') }}"
+        {%- endif -%}
+    {%- endif %}
+{% endif -%}
+
+{#- Operator conditioned defaults specification -#}
+{%- if default.operator is defined and default.operator -%}
+    Defaults>
+    {%- if default.operator is not iterable or default.operator is string -%}
+        {{ default.operator|string }}
+    {%- else -%}
+        {{ default.operator|join(',') }}
+    {%- endif -%}
+    {{ ' ' }}{{ default.name|string }}
+    {%- if default.value is defined and default.value -%}
+        {{ ' ' }}{% if default.include is defined and default.include|bool %}+{% elif default.exclude is defined and default.exclude|bool %}-{% endif %}={{ ' ' }}
+        {%- if default.value is not iterable or default.value is string -%}
+            {{ default.value|string }}
+        {%- else -%}
+            "{{  default.value|join(' ') }}"
+        {%- endif -%}
+    {%- endif %}
+{% endif -%}
+{%- endfor -%}
+{%- endif %}
+
+{%- if item.specs is defined %}
 ## User specification
-{% if item.specs is defined %}
-{% for spec in item.specs %}
-{{ spec.user|string if (spec.user is string or spec.user is not iterable) else spec.user|join(',') }} {{ spec.host|string if (spec.host is string or spec.host is not iterable) else spec.host|join(',') }}={% if spec.operator is defined and spec.operator %}({{ spec.operator|string if (spec.operator is string or spec.operator is not iterable) else spec.operator|join(',') }}) {% endif %}{% if spec.tag is defined and spec.tag %}{{ spec.tag|string if (spec.tag is string or spec.tag is not iterable) else spec.tag|join(':') }}: {% endif %}{{ spec.command|string if (spec.command is string or spec.command is not iterable) else spec.command|join(',') }}
-{% endfor %}
-{% endif %}
+{% for spec in item.specs -%}
+    {%- if spec.user is not iterable or spec.user is string -%}
+        {{ spec.user|string }}
+    {%- else -%}
+        {{ spec.user|join(',') }}
+    {%- endif -%}
+    {{ ' ' }}
+    {%- if spec.host is not iterable or spec.host is string -%}
+        {{ spec.host|string }}
+    {%- else -%}
+        {{ spec.host|join(',') }}
+    {%- endif -%}
+    =
+    {%- if spec.operator is defined and spec.operator -%}
+        (
+        {%- if spec.operator is not iterable or spec.operator is string -%}
+            {{ spec.operator|string }}
+        {%- else -%}
+            {{ spec.operator|join(',') }}
+        {%- endif -%}
+        ){{ ' ' }}
+    {%- endif -%}
+    {%- if spec.tag is defined and spec.tag -%}
+        {%- if spec.tag is not iterable or spec.tag is string -%}
+            {{ spec.tag|string }}
+        {%- else -%}
+            {{ spec.tag|join(':') }}
+        {%- endif -%}
+        :{{ ' ' }}
+    {%- endif -%}
+    {%- if spec.command is not iterable or spec.command is string -%}
+        {{ spec.command|string }}
+    {%- else -%}
+        {{ spec.command|join(',') }}
+    {%- endif %}
+{% endfor -%}
+{%- endif %}

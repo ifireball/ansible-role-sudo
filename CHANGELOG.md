@@ -22,6 +22,9 @@ Unreleased
 - Updated minimal Ansible version to `2.0`.
   [tomashavlas]
 
+- Refactored template files to more readable state.
+  [tomashavlas]
+
 v1.0
 ----
 
