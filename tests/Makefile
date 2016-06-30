@@ -14,8 +14,8 @@ main_functional:
 main_idempotency:
 	# idempotency test
 	ansible-playbook t1_main.yml -i inventory --skip-tags=pre-test,acceptance-test | tee /tmp/ansible_idempotency_test.txt\
-	&& grep -E 'test_sudo_main_centos7.*changed=0.*unreachable=0.*failed=0' /tmp/ansible_idempotency_test.txt\
-	&& grep -E 'test_sudo_main_debian8.*changed=0.*unreachable=0.*failed=0' /tmp/ansible_idempotency_test.txt\
+	&& grep -E 'test_sudo_t1_centos7.*changed=0.*unreachable=0.*failed=0' /tmp/ansible_idempotency_test.txt\
+	&& grep -E 'test_sudo_t1_debian8.*changed=0.*unreachable=0.*failed=0' /tmp/ansible_idempotency_test.txt\
 	&& (echo 'Idempotency test: PASS' && exit 0)\
 	|| (echo 'Idempotency test: FAIL' && exit 1)
 
@@ -37,8 +37,8 @@ purge_unmanaged_specs_functional:
 purge_unmanaged_specs_idempotency:
 	# idempotency test
 	ansible-playbook t2_purge_unmanaged_specs.yml -i inventory --skip-tags=pre-test,acceptance-test | tee /tmp/ansible_idempotency_test.txt\
-	&& grep -E 'test_sudo_purge_unmanaged_specs_centos7.*changed=0.*unreachable=0.*failed=0' /tmp/ansible_idempotency_test.txt\
-	&& grep -E 'test_sudo_purge_unmanaged_specs_debian8.*changed=0.*unreachable=0.*failed=0' /tmp/ansible_idempotency_test.txt\
+	&& grep -E 'test_sudo_t2_centos7.*changed=0.*unreachable=0.*failed=0' /tmp/ansible_idempotency_test.txt\
+	&& grep -E 'test_sudo_t2_debian8.*changed=0.*unreachable=0.*failed=0' /tmp/ansible_idempotency_test.txt\
 	&& (echo 'Idempotency test: PASS' && exit 0)\
 	|| (echo 'Idempotency test: FAIL' && exit 1)
 
