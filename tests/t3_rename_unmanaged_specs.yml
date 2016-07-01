@@ -1,5 +1,5 @@
 ---
-- name: Pre-Test Scenario - initialize test docker containers
+- name: Pre-Test Scenario 3.0 - initialize test docker containers
   hosts: localhost
   roles:
     - role: 'provision_docker'
@@ -22,7 +22,7 @@
       with_items: '{{ provision_docker__inventory }}'
   tags: [ 'initialize-docker' ]
 
-- name: Test Scenario 3 - rename unmanaged specifications
+- name: Test Scenario 3.1 - rename unmanaged specifications
   hosts: provision_docker__containers
   remote_user: 'root'
   pre_tasks:
@@ -37,8 +37,8 @@
       tags: [ 'pre-test' ]
     - name: Pre-Test - create sample test file
       copy:
-        dest: '{{ sudo__confd_dir }}/t3_sample_file'
-        src: 'files/acceptance-tests/t3/t3_sample_file'
+        dest: '{{ sudo__confd_dir }}/s1_sample_file'
+        src: 'files/acceptance_tests/t3/s1_sample_file'
         owner: 'root'
         group: 'root'
         mode: 0440
@@ -47,21 +47,21 @@
   post_tasks:
     - name: Acceptance Test - verify renamed drop-in configuration files
       copy:
-        dest: '{{ sudo__confd_dir }}/41-t3_sample_file-unmanaged'
-        src: 'files/acceptance-tests/t3/t3_sample_file'
+        dest: '{{ sudo__confd_dir }}/41-s1_sample_file-unmanaged'
+        src: 'files/acceptance_tests/t3/s1_sample_file'
       register: 'test_result'
       failed_when: (test_result|failed or test_result|changed)
       tags: [ 'acceptance-test' ]
     - name: Acceptance Test - verify renamed drop-in configuration files (part 2)
       file:
-        path: '{{ sudo__confd_dir }}/t3_sample_file'
+        path: '{{ sudo__confd_dir }}/s1_sample_file'
         state: 'absent'
       register: 'test_result'
       failed_when: (test_result|failed or test_result|changed)
       tags: [ 'acceptance-test' ]
     - name: Acceptance Test - verify managed configuration files
       file:
-        path: '{{ sudo__confd_dir }}/t3_test_simple'
+        path: '{{ sudo__confd_dir }}/s1_test_simple'
         state: 'file'
       register: 'test_result'
       failed_when: (test_result|failed or test_result|changed)
@@ -72,7 +72,7 @@
       sudo__specs_rename_prefix: '41-'
       sudo__specs_rename_suffix: '-unmanaged'
       sudo__specs:
-        - name: 't3_test_simple'
+        - name: 's1_test_simple'
           defaults:
             - name: '!authenticate'
               user: 'tuser'
