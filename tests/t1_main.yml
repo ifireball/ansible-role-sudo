@@ -37,8 +37,8 @@
       tags: [ 'pre-test' ]
     - name: Pre-Test - create sample test file
       copy:
-        content: 'tuser thost=(toperator) NOPASSWD: ALL'
         dest: '{{ sudo__confd_dir }}/t1_sample_file'
+        src: 'files/acceptance-tests/t1/t1_sample_file'
         owner: 'root'
         group: 'root'
         mode: 0440
