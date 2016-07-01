@@ -1,0 +1,88 @@
+---
+- name: Pre-Test Scenario - initialize test docker containers
+  hosts: localhost
+  roles:
+    - role: 'provision_docker'
+      provision_docker__inventory:
+        - name: 'test_sudo_t3_centos7'
+          image: 'tomashavlas/ansible-test:centos7'
+          volumes:
+            - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
+        - name: 'test_sudo_t3_debian8'
+          image: 'tomashavlas/ansible-test:debian8'
+          volumes:
+            - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
+  post_tasks:
+    - name: Wait for SSH connection to docker containers
+      wait_for:
+        host: '{{ hostvars[item.name]["ansible_ssh_host"] }}'
+        port: 22
+        timeout: 30
+        connect_timeout: 30
+      with_items: '{{ provision_docker__inventory }}'
+  tags: [ 'initialize-docker' ]
+
+- name: Test Scenario 3 - rename unmanaged specifications
+  hosts: provision_docker__containers
+  remote_user: 'root'
+  pre_tasks:
+    - name: Pre-Test - include OS specific variables
+      include_vars: '../vars/{{ ansible_os_family }}.yml'
+      tags: [ 'always' ]
+    - name: Pre-Test - create configuration drop-ins directory
+      file:
+        path: '{{ sudo__confd_dir }}'
+        state: 'directory'
+      changed_when: False
+      tags: [ 'pre-test' ]
+    - name: Pre-Test - create sample test file
+      copy:
+        dest: '{{ sudo__confd_dir }}/t3_sample_file'
+        src: 'files/acceptance-tests/t3/t3_sample_file'
+        owner: 'root'
+        group: 'root'
+        mode: 0440
+      changed_when: False
+      tags: [ 'pre-test' ]
+  post_tasks:
+    - name: Acceptance Test - verify renamed drop-in configuration files
+      copy:
+        dest: '{{ sudo__confd_dir }}/41-t3_sample_file-unmanaged'
+        src: 'files/acceptance-tests/t3/t3_sample_file'
+      register: 'test_result'
+      failed_when: (test_result|failed or test_result|changed)
+      tags: [ 'acceptance-test' ]
+    - name: Acceptance Test - verify renamed drop-in configuration files (part 2)
+      file:
+        path: '{{ sudo__confd_dir }}/t3_sample_file'
+        state: 'absent'
+      register: 'test_result'
+      failed_when: (test_result|failed or test_result|changed)
+      tags: [ 'acceptance-test' ]
+    - name: Acceptance Test - verify managed configuration files
+      file:
+        path: '{{ sudo__confd_dir }}/t3_test_simple'
+        state: 'file'
+      register: 'test_result'
+      failed_when: (test_result|failed or test_result|changed)
+      tags: [ 'acceptance-test' ]
+  roles:
+    - role: 'sudo'
+      sudo__specs_rename_unmanaged: True
+      sudo__specs_rename_prefix: '41-'
+      sudo__specs_rename_suffix: '-unmanaged'
+      sudo__specs:
+        - name: 't3_test_simple'
+          defaults:
+            - name: '!authenticate'
+              user: 'tuser'
+              host: 'thost'
+              operator: 'toperator'
+              command: '/bin/test'
+            - name: '!visiblepw'
+          specs:
+            - user: 'tuser'
+              host: 'thost'
+              operator: 'toperator'
+              tag: 'NOPASSWD'
+              command: 'ALL'

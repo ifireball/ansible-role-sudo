@@ -28,6 +28,9 @@ Unreleased
 - Replaced `enabled` option, with `disabled` option to honor pattern used in other roles.
   [tomashavlas]
 
+- Created `sudo__specs_rename_unmanaged` option, allowing to rename all unmanaged drop-in configuration files.
+  [tomashavlas]
+
 v1.0
 ----
 

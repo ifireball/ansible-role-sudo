@@ -1,0 +1,22 @@
+---
+- name: Find all existing sudo specs files
+  shell: 'ls -1 "{{ sudo__confd_dir }}" || true'
+  register: sudo__register_confd_present
+  changed_when: False
+  always_run: True
+
+- name: Find all managed sudo specs files
+  set_fact:
+    sudo__register_confd_managed: '{{ sudo__specs|map(attribute="name")|list }}'
+  changed_when: False
+  always_run: True
+
+- name: Rename unmanaged sudo specs files
+  command: 'mv "{{ sudo__confd_dir }}/{{ item }}" "{{ sudo__confd_dir }}/{{ sudo__specs_rename_prefix }}{{ item }}{{ sudo__specs_rename_suffix }}"'
+  args:
+    creates: '{{ sudo__confd_dir }}/{{ sudo__specs_rename_prefix }}{{ item }}{{ sudo__specs_rename_suffix }}'
+    removes: '{{ sudo__confd_dir }}/{{ item }}'
+  with_items: '{{ sudo__register_confd_present.stdout_lines }}'
+  when: ((item not in sudo__register_confd_managed) and
+         ((not sudo__specs_rename_prefix|trim or not item.startswith(sudo__specs_rename_prefix)) or
+          (not sudo__specs_rename_suffix|trim or not item.endswith(sudo__specs_rename_suffix))))

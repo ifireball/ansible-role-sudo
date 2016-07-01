@@ -97,6 +97,16 @@ sudo__specs: []
 ## OPTIONAL: if set to True, file is removed from host
 #    disabled: bool
 
+# if set to True all files located in sudo configuration dropins directory not created by this role are renamed,
+# at least one of sudo__specs_rename_prefix and sudo__specs_rename_suffix must be set
+sudo__specs_rename_unmanaged: False
+
+# prefix to prepend to filenames of files located in sudo configuration dropins directory not created by this role
+sudo__specs_rename_prefix: ''
+
+# suffix to append to filenames of files located in sudo configuration dropins directory not created by this role
+sudo__specs_rename_suffix: ''
+
 # if set to True all files located in sudo configuration dropins directory not created by this role are removed
 sudo__specs_purge_unmanaged: False
 

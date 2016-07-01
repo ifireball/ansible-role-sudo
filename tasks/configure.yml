@@ -20,6 +20,10 @@
   when: ((item.name is defined and item.name|trim) and
          (item.disabled is defined and item.disabled|bool))
 
+- include: 'rename_unmanaged_specs.yml'
+  when: ((sudo__specs_rename_unmanaged|bool) and
+         (sudo__specs_rename_prefix|trim or sudo__specs_rename_suffix|trim))
+
 - include: 'purge_unmanaged_specs.yml'
   when: (sudo__specs_purge_unmanaged|bool)
 
