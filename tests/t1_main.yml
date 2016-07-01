@@ -55,15 +55,14 @@
         directory_mode: 0550
       changed_when: False
       tags: [ 'acceptance-test' ]
-    - name: Acceptance Test - validate main configuration file
+    - name: Acceptance Test - verify main configuration file
       shell: 'bash -c "diff <(tail -n +2 {{ sudo__conf_file }}) <(tail -n +2 /tmp/acceptance-tests/t1/sudoers)"'
       changed_when: False
       tags: [ 'acceptance-test' ]
-    - name: Acceptance Test - validate dropins configuration files
+    - name: Acceptance Test - verify drop-in configuration files
       shell: 'bash -c "diff <(tail -n +2 {{ sudo__confd_dir }}/{{ item }}) <(tail -n +2 /tmp/acceptance-tests/t1/{{ item }})"'
       changed_when: False
       with_items:
-        - 't1_sample_file'
         - 't1_test_defaults'
         - 't1_test_defaults_mixed'
         - 't1_test_example_playbook_wheel'
@@ -71,13 +70,20 @@
         - 't1_test_not_disabled'
         - 't1_test_single_value'
       tags: [ 'acceptance-test' ]
-    - name: Acceptance Test - validate disabled configuration files
+    - name: Acceptance Test - verify disabled configuration files
       file:
         path: '{{ item }}'
         state: 'absent'
       with_items:
         - '{{ sudo__confd_dir }}/t1_test_disabled'
         - '{{ sudo__confd_dir }}/t1_test_empty'
+      register: 'test_result'
+      failed_when: (test_result|failed or test_result|changed)
+      tags: [ 'acceptance-test' ]
+    - name: Acceptance Test - verify unmanaged drop-in configuration files
+      copy:
+        dest: '{{ sudo__confd_dir }}/t1_sample_file'
+        src: 'files/acceptance-tests/t1/t1_sample_file'
       register: 'test_result'
       failed_when: (test_result|failed or test_result|changed)
       tags: [ 'acceptance-test' ]

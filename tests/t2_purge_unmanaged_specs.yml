@@ -48,7 +48,7 @@
       changed_when: False
       tags: [ 'pre-test' ]
   post_tasks:
-    - name: Acceptance Test - validate purged files from sudo dropins directory
+    - name: Acceptance Test - verify purged files from sudo dropins directory
       file:
         path: '{{ item }}'
         state: 'absent'
