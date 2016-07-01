@@ -67,5 +67,5 @@ clean_purge_unmanaged_specs:
 	ansible-playbook t2_purge_unmanaged_specs.yml -i inventory -e "provision_docker__container_state=absent" --tags=initialize-docker
 	
 clean_rename_unmanaged_specs:
-	ansible-playbook t2_rename_unmanaged_specs.yml -i inventory -e "provision_docker__container_state=absent" --tags=initialize-docker
+	ansible-playbook t3_rename_unmanaged_specs.yml -i inventory -e "provision_docker__container_state=absent" --tags=initialize-docker
 
