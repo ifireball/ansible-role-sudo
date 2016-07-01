@@ -1,8 +1,10 @@
 Changelog
 =========
 
-Unreleased
-----------
+v1.1
+----
+
+*Released: 2016-07-01*
 
 - Created cleanup target for tests.
   [tomashavlas]
