@@ -12,6 +12,7 @@
     group: 'root'
     mode: 0750
     state: 'directory'
+  tags: [ 'setup' ]
 
 - name: Setup sudo I/O log directory
   file:
@@ -20,3 +21,4 @@
     group: 'root'
     mode: 0750
     state: 'directory'
+  tags: [ 'setup' ]

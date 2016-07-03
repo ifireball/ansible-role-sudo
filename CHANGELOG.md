@@ -1,6 +1,12 @@
 Changelog
 =========
 
+Unreleased
+----------
+
+- Tagged tasks.
+  [tomashavlas]
+
 v1.1
 ----
 

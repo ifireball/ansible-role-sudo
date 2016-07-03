@@ -4,12 +4,14 @@
   register: sudo__register_confd_present
   changed_when: False
   always_run: True
+  tags: [ 'configure' ]
 
 - name: Find all managed sudo specs files
   set_fact:
     sudo__register_confd_managed: '{{ sudo__specs|map(attribute="name")|list }}'
   changed_when: False
   always_run: True
+  tags: [ 'configure' ]
 
 - name: Purge unmanaged sudo specs files
   file:
@@ -17,3 +19,4 @@
     state: 'absent'
   with_items: '{{ sudo__register_confd_present.stdout_lines }}'
   when: item not in sudo__register_confd_managed
+  tags: [ 'configure' ]

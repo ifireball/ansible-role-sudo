@@ -4,12 +4,14 @@
   register: sudo__register_confd_present
   changed_when: False
   always_run: True
+  tags: [ 'configure' ]
 
 - name: Find all managed sudo specs files
   set_fact:
     sudo__register_confd_managed: '{{ sudo__specs|map(attribute="name")|list }}'
   changed_when: False
   always_run: True
+  tags: [ 'configure' ]
 
 - name: Rename unmanaged sudo specs files
   command: 'mv "{{ sudo__confd_dir }}/{{ item }}" "{{ sudo__confd_dir }}/{{ sudo__specs_rename_prefix }}{{ item }}{{ sudo__specs_rename_suffix }}"'
@@ -20,3 +22,4 @@
   when: ((item not in sudo__register_confd_managed) and
          ((not sudo__specs_rename_prefix|trim or not item.startswith(sudo__specs_rename_prefix)) or
           (not sudo__specs_rename_suffix|trim or not item.endswith(sudo__specs_rename_suffix))))
+  tags: [ 'configure' ]

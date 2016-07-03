@@ -11,6 +11,7 @@
   when: ((item.name is defined and item.name|trim) and
          (item.disabled is undefined or not item.disabled|bool) and
          (item.defaults is defined or item.specs is defined))
+  tags: [ 'configure' ]
 
 - name: Remove sudo specs files
   file:
@@ -19,6 +20,7 @@
   with_items: '{{ sudo__specs }}'
   when: ((item.name is defined and item.name|trim) and
          (item.disabled is defined and item.disabled|bool))
+  tags: [ 'configure' ]
 
 - include: 'rename_unmanaged_specs.yml'
   when: ((sudo__specs_rename_unmanaged|bool) and
@@ -35,3 +37,4 @@
     group: 'root'
     mode: 0440
     validate: 'visudo -cf %s'
+  tags: [ 'configure' ]
