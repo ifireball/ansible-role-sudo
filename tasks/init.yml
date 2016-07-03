@@ -6,17 +6,17 @@
 - name: Initialize - Define sudo__packages
   set_fact:
     sudo__packages: '{{ __sudo__packages }}'
-  when: sudo__packages is not defined
+  when: sudo__packages is undefined
   tags: [ 'always' ]
 
 - name: Initialize - Define sudo__iolog_dir
   set_fact:
     sudo__iolog_dir: '{{ __sudo__iolog_dir }}'
-  when: sudo__iolog_dir is not defined
+  when: sudo__iolog_dir is undefined
   tags: [ 'always' ]
 
 - name: Initialize - Define sudo__iolog_filename
   set_fact:
     sudo__iolog_filename: '{{ __sudo__iolog_filename }}'
-  when: sudo__iolog_filename is not defined
+  when: sudo__iolog_filename is undefined
   tags: [ 'always' ]
