@@ -1,5 +1,5 @@
 ---
-- name: Configure and update sudo specs files
+- name: Configure - Update sudo specifications files
   template:
     src: 'sudoers_spec.j2'
     dest: '{{ sudo__confd_dir }}/{{ item.name }}'
@@ -13,7 +13,7 @@
          (item.defaults is defined or item.specs is defined))
   tags: [ 'configure' ]
 
-- name: Remove sudo specs files
+- name: Configure - Remove sudo specifications files
   file:
     path: '{{ sudo__confd_dir }}/{{ item.name }}'
     state: 'absent'
@@ -29,7 +29,7 @@
 - include: 'configure/purge_unmanaged_specs.yml'
   when: (sudo__specs_purge_unmanaged|bool)
 
-- name: Configure and update defaults and aliases in sudoers file
+- name: Configure - Update defaults and aliases in sudoers file
   template:
     src: 'sudoers.j2'
     dest: '{{ sudo__conf_file }}'

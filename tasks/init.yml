@@ -1,21 +1,21 @@
 ---
-- name: Include OS specific variables
+- name: Initialize - Include OS specific variables
   include_vars: '{{ ansible_os_family }}.yml'
   tags: [ 'always' ]
 
-- name: Define sudo__packages
+- name: Initialize - Define sudo__packages
   set_fact:
     sudo__packages: '{{ __sudo__packages }}'
   when: sudo__packages is not defined
   tags: [ 'always' ]
 
-- name: Define sudo__iolog_dir
+- name: Initialize - Define sudo__iolog_dir
   set_fact:
     sudo__iolog_dir: '{{ __sudo__iolog_dir }}'
   when: sudo__iolog_dir is not defined
   tags: [ 'always' ]
 
-- name: Define sudo__iolog_filename
+- name: Initialize - Define sudo__iolog_filename
   set_fact:
     sudo__iolog_filename: '{{ __sudo__iolog_filename }}'
   when: sudo__iolog_filename is not defined

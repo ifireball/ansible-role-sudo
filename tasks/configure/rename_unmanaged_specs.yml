@@ -1,19 +1,19 @@
 ---
-- name: Find all existing sudo specs files
+- name: Configure - Create list of existing sudo specifications files
   shell: 'ls -1 "{{ sudo__confd_dir }}" || true'
   register: sudo__register_confd_present
   changed_when: False
   always_run: True
   tags: [ 'configure' ]
 
-- name: Find all managed sudo specs files
+- name: Configure - Create list of managed sudo specifications files
   set_fact:
     sudo__register_confd_managed: '{{ sudo__specs|map(attribute="name")|list }}'
   changed_when: False
   always_run: True
   tags: [ 'configure' ]
 
-- name: Rename unmanaged sudo specs files
+- name: Configure - Rename unmanaged sudo specifications files
   command: 'mv "{{ sudo__confd_dir }}/{{ item }}" "{{ sudo__confd_dir }}/{{ sudo__specs_rename_prefix }}{{ item }}{{ sudo__specs_rename_suffix }}"'
   args:
     creates: '{{ sudo__confd_dir }}/{{ sudo__specs_rename_prefix }}{{ item }}{{ sudo__specs_rename_suffix }}'

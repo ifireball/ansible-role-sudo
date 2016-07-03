@@ -5,7 +5,7 @@
 - include: 'setup/RedHat.yml'
   when: ansible_os_family == 'RedHat'
 
-- name: Setup sudo configuration drop-ins directory
+- name: Setup - Create configuration drop-ins directory
   file:
     path: '{{ sudo__confd_dir }}'
     owner: 'root'
@@ -14,7 +14,7 @@
     state: 'directory'
   tags: [ 'setup' ]
 
-- name: Setup sudo I/O log directory
+- name: Setup - Create sudo I/O logs directory
   file:
     path: '{{ sudo__iolog_dir }}'
     owner: 'root'

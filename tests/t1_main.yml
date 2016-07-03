@@ -1,5 +1,5 @@
 ---
-- name: Pre-Test Scenario 1.0 - initialize docker containers
+- name: Pre-Test Scenario 1.0 - Initialize Docker containers
   hosts: localhost
   roles:
     - role: 'provision_docker'
@@ -13,7 +13,7 @@
           volumes:
             - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
   post_tasks:
-    - name: Wait for SSH connection to docker containers
+    - name: Wait for SSH connection to Docker containers
       wait_for:
         host: '{{ hostvars[item.name]["ansible_ssh_host"] }}'
         port: 22
@@ -22,20 +22,20 @@
       with_items: '{{ provision_docker__inventory }}'
   tags: [ 'initialize-docker' ]
 
-- name: Test Scenario 1.1 - basic functionality
+- name: Test Scenario 1.1 - Basic role functionality
   hosts: provision_docker__containers
   remote_user: 'root'
   pre_tasks:
-    - name: Pre-Test - include OS specific variables
+    - name: Pre-Test - Include OS specific variables
       include_vars: '../vars/{{ ansible_os_family }}.yml'
       tags: [ 'always' ]
-    - name: Pre-Test - create configuration drop-ins directory
+    - name: Pre-Test - Create configuration drop-ins directory
       file:
         path: '{{ sudo__confd_dir }}'
         state: 'directory'
       changed_when: False
       tags: [ 'pre-test' ]
-    - name: Pre-Test - create sample test file
+    - name: Pre-Test - Create test file
       copy:
         dest: '{{ sudo__confd_dir }}/s1_sample_file'
         src: 'files/acceptance_tests/t1/s1_sample_file'
@@ -45,7 +45,7 @@
       changed_when: False
       tags: [ 'pre-test' ]
   post_tasks:
-    - name: Acceptance Test - copy acceptance test files into docker containers
+    - name: Acceptance Test - Copy acceptance test files into Docker containers
       copy:
         src: 'files/acceptance_tests/'
         dest: '/tmp/acceptance_tests/'
@@ -55,11 +55,11 @@
         directory_mode: 0550
       changed_when: False
       tags: [ 'acceptance-test' ]
-    - name: Acceptance Test - verify main configuration file
+    - name: Acceptance Test - Verify main configuration file
       shell: 'bash -c "diff <(tail -n +2 {{ sudo__conf_file }}) <(tail -n +2 /tmp/acceptance_tests/t1/s1_sudoers)"'
       changed_when: False
       tags: [ 'acceptance-test' ]
-    - name: Acceptance Test - verify drop-in configuration files
+    - name: Acceptance Test - Verify drop-in configuration files
       shell: 'bash -c "diff <(tail -n +2 {{ sudo__confd_dir }}/{{ item }}) <(tail -n +2 /tmp/acceptance_tests/t1/{{ item }})"'
       changed_when: False
       with_items:
@@ -70,7 +70,7 @@
         - 's1_test_not_disabled'
         - 's1_test_single_value'
       tags: [ 'acceptance-test' ]
-    - name: Acceptance Test - verify disabled configuration files
+    - name: Acceptance Test - Verify disabled drop-in configuration files
       file:
         path: '{{ item }}'
         state: 'absent'
@@ -80,7 +80,7 @@
       register: 'test_result'
       failed_when: (test_result|failed or test_result|changed)
       tags: [ 'acceptance-test' ]
-    - name: Acceptance Test - verify unmanaged drop-in configuration files
+    - name: Acceptance Test - Verify unmanaged drop-in configuration files
       copy:
         dest: '{{ sudo__confd_dir }}/s1_sample_file'
         src: 'files/acceptance_tests/t1/s1_sample_file'

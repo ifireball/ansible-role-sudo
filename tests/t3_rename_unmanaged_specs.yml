@@ -1,5 +1,5 @@
 ---
-- name: Pre-Test Scenario 3.0 - initialize docker containers
+- name: Pre-Test Scenario 3.0 - Initialize Docker containers
   hosts: localhost
   roles:
     - role: 'provision_docker'
@@ -13,7 +13,7 @@
           volumes:
             - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
   post_tasks:
-    - name: Wait for SSH connection to docker containers
+    - name: Wait for SSH connection to Docker containers
       wait_for:
         host: '{{ hostvars[item.name]["ansible_ssh_host"] }}'
         port: 22
@@ -22,20 +22,20 @@
       with_items: '{{ provision_docker__inventory }}'
   tags: [ 'initialize-docker' ]
 
-- name: Test Scenario 3.1 - rename unmanaged specifications
+- name: Test Scenario 3.1 - Rename unmanaged specifications
   hosts: provision_docker__containers
   remote_user: 'root'
   pre_tasks:
-    - name: Pre-Test - include OS specific variables
+    - name: Pre-Test - Include OS specific variables
       include_vars: '../vars/{{ ansible_os_family }}.yml'
       tags: [ 'always' ]
-    - name: Pre-Test - create configuration drop-ins directory
+    - name: Pre-Test - Create configuration drop-in directory
       file:
         path: '{{ sudo__confd_dir }}'
         state: 'directory'
       changed_when: False
       tags: [ 'pre-test' ]
-    - name: Pre-Test - create sample test file
+    - name: Pre-Test - Create test file
       copy:
         dest: '{{ sudo__confd_dir }}/s1_sample_file'
         src: 'files/acceptance_tests/t3/s1_sample_file'
@@ -45,21 +45,21 @@
       changed_when: False
       tags: [ 'pre-test' ]
   post_tasks:
-    - name: Acceptance Test - verify renamed drop-in configuration files
+    - name: Acceptance Test - Verify renamed drop-in configuration files
       copy:
         dest: '{{ sudo__confd_dir }}/41-s1_sample_file-unmanaged'
         src: 'files/acceptance_tests/t3/s1_sample_file'
       register: 'test_result'
       failed_when: (test_result|failed or test_result|changed)
       tags: [ 'acceptance-test' ]
-    - name: Acceptance Test - verify renamed drop-in configuration files (part 2)
+    - name: Acceptance Test - Verify renamed drop-in configuration files (part 2)
       file:
         path: '{{ sudo__confd_dir }}/s1_sample_file'
         state: 'absent'
       register: 'test_result'
       failed_when: (test_result|failed or test_result|changed)
       tags: [ 'acceptance-test' ]
-    - name: Acceptance Test - verify managed configuration files
+    - name: Acceptance Test - Verify managed configuration files
       file:
         path: '{{ sudo__confd_dir }}/s1_test_simple'
         state: 'file'

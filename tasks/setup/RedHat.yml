@@ -1,5 +1,5 @@
 ---
-- name: Install sudo packages
+- name: Setup (RedHat) - Install sudo packages
   yum:
     name: '{{ item }}'
     state: 'installed'
@@ -7,7 +7,7 @@
   when: ansible_pkg_mgr == 'yum'
   tags: [ 'setup' ]
 
-- name: Install sudo packages
+- name: Setup (RedHat) - Install sudo packages
   dnf:
     name: '{{ item }}'
     state: 'installed'

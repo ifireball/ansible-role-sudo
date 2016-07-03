@@ -1,5 +1,5 @@
 ---
-- name: Pre-Test Scenario 2.0 - initialize docker containers
+- name: Pre-Test Scenario 2.0 - Initialize Docker containers
   hosts: localhost
   roles:
     - role: 'provision_docker'
@@ -13,7 +13,7 @@
           volumes:
             - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
   post_tasks:
-    - name: Wait for SSH connection to docker containers
+    - name: Wait for SSH connection to Docker containers
       wait_for:
         host: '{{ hostvars[item.name]["ansible_ssh_host"] }}'
         port: 22
@@ -22,14 +22,14 @@
       with_items: '{{ provision_docker__inventory }}'
   tags: [ 'initialize-docker' ]
 
-- name: Test Scenario 2.1 - purge unmanaged specifications
+- name: Test Scenario 2.1 - Purge unmanaged specifications
   hosts: provision_docker__containers
   remote_user: 'root'
   pre_tasks:
-    - name: Pre-Test - include OS specific variables
+    - name: Pre-Test - Include OS specific variables
       include_vars: '../vars/{{ ansible_os_family }}.yml'
       tags: [ 'always' ]
-    - name: Pre-Test - create "remove me" test directory
+    - name: Pre-Test - Create "remove me" test directory
       file:
         path: '{{ sudo__confd_dir }}/s1_test_remove_me_dir'
         owner: 'root'
@@ -38,7 +38,7 @@
         state: 'directory'
       changed_when: False
       tags: [ 'pre-test' ]
-    - name: Pre-Test - create "remove me" test file
+    - name: Pre-Test - Create "remove me" test file
       copy:
         content: 'remove me'
         dest: '{{ sudo__confd_dir }}/s1_test_remove_me_file'
@@ -48,7 +48,7 @@
       changed_when: False
       tags: [ 'pre-test' ]
   post_tasks:
-    - name: Acceptance Test - verify purged files from sudo dropins directory
+    - name: Acceptance Test - Verify purged files from sudo drop-in directory
       file:
         path: '{{ item }}'
         state: 'absent'

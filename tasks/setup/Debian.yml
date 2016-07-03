@@ -1,9 +1,9 @@
 ---
-- name: Update apt cache
+- name: Setup (Debian) - Update apt cache
   apt: update_cache=yes cache_valid_time=86400
   tags: [ 'setup' ]
 
-- name: Install sudo packages
+- name: Setup (Debian) - Install sudo packages
   apt:
     name: '{{ item }}'
     state: 'installed'
