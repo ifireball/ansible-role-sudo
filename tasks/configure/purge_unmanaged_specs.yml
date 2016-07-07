@@ -2,15 +2,15 @@
 - name: Configure - Create list of existing sudo specifications files
   shell: 'ls -1 "{{ sudo__confd_dir }}" || true'
   register: sudo__register_confd_present
-  changed_when: False
-  always_run: True
+  changed_when: false
+  always_run: true
   tags: [ 'configure' ]
 
 - name: Configure - Create list of managed sudo specifications files
   set_fact:
     sudo__register_confd_managed: '{{ sudo__specs|map(attribute="name")|list }}'
-  changed_when: False
-  always_run: True
+  changed_when: false
+  always_run: true
   tags: [ 'configure' ]
 
 - name: Configure - Purge unmanaged sudo specifications files

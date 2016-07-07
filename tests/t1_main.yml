@@ -33,7 +33,7 @@
       file:
         path: '{{ sudo__confd_dir }}'
         state: 'directory'
-      changed_when: False
+      changed_when: false
       tags: [ 'pre-test' ]
     - name: Pre-Test - Create test file
       copy:
@@ -42,7 +42,7 @@
         owner: 'root'
         group: 'root'
         mode: 0440
-      changed_when: False
+      changed_when: false
       tags: [ 'pre-test' ]
   post_tasks:
     - name: Acceptance Test - Copy acceptance test files into Docker containers
@@ -53,15 +53,15 @@
         group: 'root'
         mode: 0440
         directory_mode: 0550
-      changed_when: False
+      changed_when: false
       tags: [ 'acceptance-test' ]
     - name: Acceptance Test - Verify main configuration file
       shell: 'bash -c "diff <(tail -n +2 {{ sudo__conf_file }}) <(tail -n +2 /tmp/acceptance_tests/t1/s1_sudoers)"'
-      changed_when: False
+      changed_when: false
       tags: [ 'acceptance-test' ]
     - name: Acceptance Test - Verify drop-in configuration files
       shell: 'bash -c "diff <(tail -n +2 {{ sudo__confd_dir }}/{{ item }}) <(tail -n +2 /tmp/acceptance_tests/t1/{{ item }})"'
-      changed_when: False
+      changed_when: false
       with_items:
         - 's1_test_defaults'
         - 's1_test_defaults_mixed'
@@ -111,23 +111,23 @@
 # test single value default exclude
           - name: 'env_keep'
             value: 'LC_IDENTIFICATION'
-            exclude: True
+            exclude: true
 # test multiple value default exclude
           - name: 'env_keep'
             value:
               - 'LC_MEASUREMENT'
               - 'LC_MONETARY'
-            exclude: True
+            exclude: true
 # test single value default include
           - name: 'env_keep'
             value: 'LC_TIME'
-            include: True
+            include: true
 # test multiple value default include
           - name: 'env_keep'
             value:
               - 'LANGUAGE'
               - 'LINGUAS'
-            include: True
+            include: true
 # test multiple value default with single value
           - name: 'timestamp_timeout'
             value:
@@ -141,8 +141,8 @@
 # test value default exclude and include
           - name: 'env_keep'
             value: 'LC_COLLATE'
-            exclude: True
-            include: True
+            exclude: true
+            include: true
         sudo__cmnd_aliases:
 # test single command alias
           - name: 'CMND_TEST'
@@ -304,12 +304,12 @@
           - name: 's1_test_empty'
 # test disabled definition
           - name: 's1_test_disabled'
-            disabled: True
+            disabled: true
             defaults:
               - name: '!visiblepw'
 # test not disabled definition
           - name: 's1_test_not_disabled'
-            disabled: False
+            disabled: false
             defaults:
               - name: '!visiblepw'
 # test example playbook specification

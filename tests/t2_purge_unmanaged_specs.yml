@@ -36,7 +36,7 @@
         group: 'root'
         mode: 0550
         state: 'directory'
-      changed_when: False
+      changed_when: false
       tags: [ 'pre-test' ]
     - name: Pre-Test - Create "remove me" test file
       copy:
@@ -45,7 +45,7 @@
         owner: 'root'
         group: 'root'
         mode: 0440
-      changed_when: False
+      changed_when: false
       tags: [ 'pre-test' ]
   post_tasks:
     - name: Acceptance Test - Verify purged files from sudo drop-in directory
@@ -60,4 +60,4 @@
       tags: [ 'acceptance-test' ]
   roles:
       - role: 'sudo'
-        sudo__specs_purge_unmanaged: True
+        sudo__specs_purge_unmanaged: true

@@ -94,12 +94,12 @@ sudo__specs: []
 #        tag: string | [ string ]
 ## specification command(s), mutiple values are concatenated with comma
 #        command: string | [ string ]
-## OPTIONAL: if set to True, file is removed from host
+## OPTIONAL: if set to true, file is removed from host
 #    disabled: bool
 
-# if set to True all files located in sudo configuration dropins directory not created by this role are renamed,
+# if set to true all files located in sudo configuration dropins directory not created by this role are renamed,
 # at least one of sudo__specs_rename_prefix and sudo__specs_rename_suffix must be set
-sudo__specs_rename_unmanaged: False
+sudo__specs_rename_unmanaged: false
 
 # prefix to prepend to filenames of files located in sudo configuration dropins directory not created by this role
 sudo__specs_rename_prefix: ''
@@ -107,8 +107,8 @@ sudo__specs_rename_prefix: ''
 # suffix to append to filenames of files located in sudo configuration dropins directory not created by this role
 sudo__specs_rename_suffix: ''
 
-# if set to True all files located in sudo configuration dropins directory not created by this role are removed
-sudo__specs_purge_unmanaged: False
+# if set to true all files located in sudo configuration dropins directory not created by this role are removed
+sudo__specs_purge_unmanaged: false
 
 ## OPTIONAL: list of sudo packages, defaults to OS specific value
 # sudo__packages: string | [ string ]

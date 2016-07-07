@@ -33,7 +33,7 @@
       file:
         path: '{{ sudo__confd_dir }}'
         state: 'directory'
-      changed_when: False
+      changed_when: false
       tags: [ 'pre-test' ]
     - name: Pre-Test - Create test file
       copy:
@@ -42,7 +42,7 @@
         owner: 'root'
         group: 'root'
         mode: 0440
-      changed_when: False
+      changed_when: false
       tags: [ 'pre-test' ]
   post_tasks:
     - name: Acceptance Test - Verify renamed drop-in configuration files
@@ -68,7 +68,7 @@
       tags: [ 'acceptance-test' ]
   roles:
     - role: 'sudo'
-      sudo__specs_rename_unmanaged: True
+      sudo__specs_rename_unmanaged: true
       sudo__specs_rename_prefix: '41-'
       sudo__specs_rename_suffix: '-unmanaged'
       sudo__specs:
