@@ -4,11 +4,11 @@
   roles:
     - role: 'provision_docker'
       provision_docker__inventory:
-        - name: 'test_sudo_t3_centos7'
+        - name: 'test_sudo_03_centos7'
           image: 'tomashavlas/ansible-test:centos7'
           volumes:
             - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
-        - name: 'test_sudo_t3_debian8'
+        - name: 'test_sudo_03_debian8'
           image: 'tomashavlas/ansible-test:debian8'
           volumes:
             - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
@@ -32,36 +32,39 @@
     - name: Pre-Test - Create configuration drop-in directory
       file:
         path: '{{ sudo__confd_dir }}'
+        owner: 'root'
+        group: 'root'
+        mode: '0550'
         state: 'directory'
       changed_when: false
       tags: [ 'pre-test' ]
     - name: Pre-Test - Create test file
       copy:
-        dest: '{{ sudo__confd_dir }}/s1_sample_file'
-        src: 'files/acceptance_tests/t3/s1_sample_file'
+        dest: '{{ sudo__confd_dir }}/s1_unmanaged'
+        src: 'files/sample_specs'
         owner: 'root'
         group: 'root'
-        mode: 0440
+        mode: '0440'
       changed_when: false
       tags: [ 'pre-test' ]
   post_tasks:
-    - name: Acceptance Test - Verify renamed drop-in configuration files
+    - name: Acceptance Test - Verify renamed drop-in specification file (1 / 2)
       copy:
-        dest: '{{ sudo__confd_dir }}/41-s1_sample_file-unmanaged'
-        src: 'files/acceptance_tests/t3/s1_sample_file'
+        dest: '{{ sudo__confd_dir }}/41-s1_unmanaged-unmanaged'
+        src: 'files/sample_specs'
       register: 'test_result'
       failed_when: (test_result|failed or test_result|changed)
       tags: [ 'acceptance-test' ]
-    - name: Acceptance Test - Verify renamed drop-in configuration files (part 2)
+    - name: Acceptance Test - Verify renamed drop-in specification file (2 / 2)
       file:
-        path: '{{ sudo__confd_dir }}/s1_sample_file'
+        path: '{{ sudo__confd_dir }}/s1_unmanaged'
         state: 'absent'
       register: 'test_result'
       failed_when: (test_result|failed or test_result|changed)
       tags: [ 'acceptance-test' ]
-    - name: Acceptance Test - Verify managed configuration files
+    - name: Acceptance Test - Verify managed specification file
       file:
-        path: '{{ sudo__confd_dir }}/s1_test_simple'
+        path: '{{ sudo__confd_dir }}/s1_managed'
         state: 'file'
       register: 'test_result'
       failed_when: (test_result|failed or test_result|changed)
@@ -72,7 +75,7 @@
       sudo__specs_rename_prefix: '41-'
       sudo__specs_rename_suffix: '-unmanaged'
       sudo__specs:
-        - name: 's1_test_simple'
+        - name: 's1_managed'
           defaults:
             - name: '!authenticate'
               user: 'tuser'
