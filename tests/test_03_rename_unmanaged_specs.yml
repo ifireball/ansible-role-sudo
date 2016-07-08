@@ -2,7 +2,7 @@
 - name: Pre-Test Scenario 3.0 - Initialize Docker containers
   hosts: localhost
   roles:
-    - role: 'provision_docker'
+    - role: 'tomashavlas.provision_docker'
       provision_docker__inventory:
         - name: 'test_sudo_03_centos7'
           image: 'tomashavlas/ansible-test:centos7'
@@ -70,7 +70,7 @@
       failed_when: (test_result|failed or test_result|changed)
       tags: [ 'acceptance-test' ]
   roles:
-    - role: 'sudo'
+    - role: 'tomashavlas.sudo'
       sudo__specs_rename_unmanaged: true
       sudo__specs_rename_prefix: '41-'
       sudo__specs_rename_suffix: '-unmanaged'

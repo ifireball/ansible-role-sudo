@@ -131,7 +131,7 @@ Example Playbook
 ```yaml
 - hosts: all
   roles:
-    - role: sudo
+    - role: 'tomashavlas.sudo'
       sudo__defaults:
         - name: 'env_reset'
         - name: '!visiblepw'

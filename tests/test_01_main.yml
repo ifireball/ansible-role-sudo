@@ -2,7 +2,7 @@
 - name: Pre-Test Scenario 1.0 - Initialize Docker containers
   hosts: localhost
   roles:
-    - role: 'provision_docker'
+    - role: 'tomashavlas.provision_docker'
       provision_docker__inventory:
         - name: 'test_sudo_01_centos7'
           image: 'tomashavlas/ansible-test:centos7'
@@ -96,7 +96,7 @@
       changed_when: false
       tags: [ 'acceptance-test' ]
   roles:
-      - role: 'sudo'
+      - role: 'tomashavlas.sudo'
 # test defaults
         sudo__defaults:
 ## test boolean default
