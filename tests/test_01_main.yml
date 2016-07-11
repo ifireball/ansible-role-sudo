@@ -56,24 +56,39 @@
       changed_when: false
       tags: [ "acceptance-test" ]
     - name: Acceptance Test - Verify global defaults and aliases
-      shell: "bash -c 'diff <(tail -n +2 {{ sudo__conf_file }}) <(tail -n +2 /tmp/acceptance/01/s1_sudoers)'"
-      changed_when: false
+      copy:
+        dest: "{{ sudo__conf_file }}"
+        src: "files/acceptance/01/s1_sudoers"
+      register: "test_result"
+      failed_when: (test_result|failed or test_result|changed)
       tags: [ "acceptance-test" ]
     - name: Acceptance Test - Verify single value specifications
-      shell: "bash -c 'diff <(tail -n +2 {{ sudo__confd_dir }}/s1_specs_simple) <(tail -n +2 /tmp/acceptance/01/s1_specs_simple)'"
-      changed_when: false
+      copy:
+        dest: "{{ sudo__confd_dir }}/s1_specs_simple"
+        src: "files/acceptance/01/s1_specs_simple"
+      register: "test_result"
+      failed_when: (test_result|failed or test_result|changed)
       tags: [ "acceptance-test" ]
     - name: Acceptance Test - Verify multiple value specifications
-      shell: "bash -c 'diff <(tail -n +2 {{ sudo__confd_dir }}/s1_specs_multivalue) <(tail -n +2 /tmp/acceptance/01/s1_specs_multivalue)'"
-      changed_when: false
+      copy:
+        dest: "{{ sudo__confd_dir }}/s1_specs_multivalue"
+        src: "files/acceptance/01/s1_specs_multivalue"
+      register: "test_result"
+      failed_when: (test_result|failed or test_result|changed)
       tags: [ "acceptance-test" ]
     - name: Acceptance Test - Verify standalone defaults in specification file
-      shell: "bash -c 'diff <(tail -n +2 {{ sudo__confd_dir }}/s1_defaults_standalone) <(tail -n +2 /tmp/acceptance/01/s1_defaults_standalone)'"
-      changed_when: false
+      copy:
+        dest: "{{ sudo__confd_dir }}/s1_defaults_standalone"
+        src: "files/acceptance/01/s1_defaults_standalone"
+      register: "test_result"
+      failed_when: (test_result|failed or test_result|changed)
       tags: [ "acceptance-test" ]
     - name: Acceptance Test - Verify defaults mixed with specifications
-      shell: "bash -c 'diff <(tail -n +2 {{ sudo__confd_dir }}/s1_specs_and_defaults) <(tail -n +2 /tmp/acceptance/01/s1_specs_and_defaults)'"
-      changed_when: false
+      copy:
+        dest: "{{ sudo__confd_dir }}/s1_specs_and_defaults"
+        src: "files/acceptance/01/s1_specs_and_defaults"
+      register: "test_result"
+      failed_when: (test_result|failed or test_result|changed)
       tags: [ "acceptance-test" ]
     - name: Acceptance Test - Verify empty specification
       file:
@@ -88,12 +103,18 @@
       changed_when: false
       tags: [ "acceptance-test" ]
     - name: Acceptance Test - Verify not disabled specification
-      shell: "bash -c 'diff <(tail -n +2 {{ sudo__confd_dir }}/s1_defaults_not_disabled) <(tail -n +2 /tmp/acceptance/01/s1_defaults_not_disabled)'"
-      changed_when: false
+      copy:
+        dest: "{{ sudo__confd_dir }}/s1_defaults_not_disabled"
+        src: "files/acceptance/01/s1_defaults_not_disabled"
+      register: "test_result"
+      failed_when: (test_result|failed or test_result|changed)
       tags: [ "acceptance-test" ]
-    - name: Acceptance Test - Verify example playbook specification
-      shell: "bash -c 'diff <(tail -n +2 {{ sudo__confd_dir }}/s1_specs_example_playbook) <(tail -n +2 /tmp/acceptance/01/s1_specs_example_playbook)'"
-      changed_when: false
+    - name: Acceptance Test - Verify single value specifications
+      copy:
+        dest: "{{ sudo__confd_dir }}/s1_specs_example_playbook"
+        src: "files/acceptance/01/s1_specs_example_playbook"
+      register: "test_result"
+      failed_when: (test_result|failed or test_result|changed)
       tags: [ "acceptance-test" ]
   roles:
       - role: "tomashavlas.sudo"
