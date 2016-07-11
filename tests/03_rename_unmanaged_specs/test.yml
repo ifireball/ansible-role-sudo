@@ -27,7 +27,7 @@
   remote_user: "root"
   pre_tasks:
     - name: Pre-Test - Include OS specific variables
-      include_vars: "../vars/{{ ansible_os_family }}.yml"
+      include_vars: "../../vars/{{ ansible_os_family }}.yml"
       tags: [ "always" ]
     - name: Pre-Test - Create configuration drop-in directory
       file:
@@ -41,7 +41,7 @@
     - name: Pre-Test - Create test file
       copy:
         dest: "{{ sudo__confd_dir }}/s1_unmanaged"
-        src: "files/sample_specs"
+        src: "files/sudoers.d/sample_specs"
         owner: "root"
         group: "root"
         mode: "0440"
@@ -51,7 +51,7 @@
     - name: Acceptance Test - Verify renamed drop-in specification file (1 / 2)
       copy:
         dest: "{{ sudo__confd_dir }}/41-s1_unmanaged-unmanaged"
-        src: "files/sample_specs"
+        src: "files/sudoers.d/sample_specs"
       register: "test_result"
       failed_when: (test_result|failed or test_result|changed)
       tags: [ "acceptance-test" ]

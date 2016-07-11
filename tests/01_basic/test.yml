@@ -27,7 +27,7 @@
   remote_user: "root"
   pre_tasks:
     - name: Pre-Test - Include OS specific variables
-      include_vars: "../vars/{{ ansible_os_family }}.yml"
+      include_vars: "../../vars/{{ ansible_os_family }}.yml"
       tags: [ "always" ]
     - name: Pre-Test - Create configuration drop-ins directory
       file:
@@ -38,7 +38,7 @@
     - name: Pre-Test - Create test file
       copy:
         dest: "{{ sudo__confd_dir }}/s1_sample_specs"
-        src: "files/sample_specs"
+        src: "files/sudoers.d/sample_specs"
         owner: "root"
         group: "root"
         mode: 0440
@@ -58,35 +58,35 @@
     - name: Acceptance Test - Verify global defaults and aliases
       copy:
         dest: "{{ sudo__conf_file }}"
-        src: "files/acceptance/01/s1_sudoers"
+        src: "files/acceptance/s1_sudoers"
       register: "test_result"
       failed_when: (test_result|failed or test_result|changed)
       tags: [ "acceptance-test" ]
     - name: Acceptance Test - Verify single value specifications
       copy:
         dest: "{{ sudo__confd_dir }}/s1_specs_simple"
-        src: "files/acceptance/01/s1_specs_simple"
+        src: "files/acceptance/s1_specs_simple"
       register: "test_result"
       failed_when: (test_result|failed or test_result|changed)
       tags: [ "acceptance-test" ]
     - name: Acceptance Test - Verify multiple value specifications
       copy:
         dest: "{{ sudo__confd_dir }}/s1_specs_multivalue"
-        src: "files/acceptance/01/s1_specs_multivalue"
+        src: "files/acceptance/s1_specs_multivalue"
       register: "test_result"
       failed_when: (test_result|failed or test_result|changed)
       tags: [ "acceptance-test" ]
     - name: Acceptance Test - Verify standalone defaults in specification file
       copy:
         dest: "{{ sudo__confd_dir }}/s1_defaults_standalone"
-        src: "files/acceptance/01/s1_defaults_standalone"
+        src: "files/acceptance/s1_defaults_standalone"
       register: "test_result"
       failed_when: (test_result|failed or test_result|changed)
       tags: [ "acceptance-test" ]
     - name: Acceptance Test - Verify defaults mixed with specifications
       copy:
         dest: "{{ sudo__confd_dir }}/s1_specs_and_defaults"
-        src: "files/acceptance/01/s1_specs_and_defaults"
+        src: "files/acceptance/s1_specs_and_defaults"
       register: "test_result"
       failed_when: (test_result|failed or test_result|changed)
       tags: [ "acceptance-test" ]
@@ -105,14 +105,14 @@
     - name: Acceptance Test - Verify not disabled specification
       copy:
         dest: "{{ sudo__confd_dir }}/s1_defaults_not_disabled"
-        src: "files/acceptance/01/s1_defaults_not_disabled"
+        src: "files/acceptance/s1_defaults_not_disabled"
       register: "test_result"
       failed_when: (test_result|failed or test_result|changed)
       tags: [ "acceptance-test" ]
     - name: Acceptance Test - Verify single value specifications
       copy:
         dest: "{{ sudo__confd_dir }}/s1_specs_example_playbook"
-        src: "files/acceptance/01/s1_specs_example_playbook"
+        src: "files/acceptance/s1_specs_example_playbook"
       register: "test_result"
       failed_when: (test_result|failed or test_result|changed)
       tags: [ "acceptance-test" ]

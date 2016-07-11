@@ -27,7 +27,7 @@
   remote_user: "root"
   pre_tasks:
     - name: Pre-Test - Include OS specific variables
-      include_vars: "../vars/{{ ansible_os_family }}.yml"
+      include_vars: "../../vars/{{ ansible_os_family }}.yml"
       tags: [ "always" ]
     - name: Pre-Test - Create "remove me" test directory
       file:
@@ -41,7 +41,7 @@
     - name: Pre-Test - Create "remove me" test file
       copy:
         dest: "{{ sudo__confd_dir }}/s1_remove_me"
-        src: "files/sample_specs"
+        src: "files/sudoers.d/sample_specs"
         owner: "root"
         group: "root"
         mode: "0440"
