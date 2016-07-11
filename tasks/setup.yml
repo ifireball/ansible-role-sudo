@@ -1,24 +1,24 @@
 ---
-- include: 'setup/Debian.yml'
-  when: ansible_os_family == 'Debian'
+- include: "setup/Debian.yml"
+  when: ansible_os_family == "Debian"
 
-- include: 'setup/RedHat.yml'
-  when: ansible_os_family == 'RedHat'
+- include: "setup/RedHat.yml"
+  when: ansible_os_family == "RedHat"
 
 - name: Setup - Create configuration drop-ins directory
   file:
-    path: '{{ sudo__confd_dir }}'
-    owner: 'root'
-    group: 'root'
+    path: "{{ sudo__confd_dir }}"
+    owner: "root"
+    group: "root"
     mode: 0750
-    state: 'directory'
-  tags: [ 'setup' ]
+    state: "directory"
+  tags: [ "setup" ]
 
 - name: Setup - Create sudo I/O logs directory
   file:
-    path: '{{ sudo__iolog_dir }}'
-    owner: 'root'
-    group: 'root'
+    path: "{{ sudo__iolog_dir }}"
+    owner: "root"
+    group: "root"
     mode: 0750
-    state: 'directory'
-  tags: [ 'setup' ]
+    state: "directory"
+  tags: [ "setup" ]

@@ -83,10 +83,10 @@ sudo__specs: []
 sudo__specs_rename_unmanaged: false
 
 # prefix to prepend to filenames of files located in sudo configuration dropins directory not created by this role
-sudo__specs_rename_prefix: ''
+sudo__specs_rename_prefix: ""
 
 # suffix to append to filenames of files located in sudo configuration dropins directory not created by this role
-sudo__specs_rename_suffix: ''
+sudo__specs_rename_suffix: ""
 
 # if set to true all files located in sudo configuration dropins directory not created by this role are removed
 sudo__specs_purge_unmanaged: false

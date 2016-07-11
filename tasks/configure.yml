@@ -1,40 +1,40 @@
 ---
 - name: Configure - Update sudo specifications files
   template:
-    src: 'sudoers_spec.j2'
-    dest: '{{ sudo__confd_dir }}/{{ item.name }}'
-    owner: 'root'
-    group: 'root'
+    src: "sudoers_spec.j2"
+    dest: "{{ sudo__confd_dir }}/{{ item.name }}"
+    owner: "root"
+    group: "root"
     mode: 0440
-    validate: 'visudo -cf %s'
-  with_items: '{{ sudo__specs }}'
+    validate: "visudo -cf %s"
+  with_items: "{{ sudo__specs }}"
   when: ((item.name is defined and item.name|trim) and
          (item.disabled is undefined or not item.disabled|bool) and
          (item.defaults is defined or item.specs is defined))
-  tags: [ 'configure' ]
+  tags: [ "configure" ]
 
 - name: Configure - Remove sudo specifications files
   file:
-    path: '{{ sudo__confd_dir }}/{{ item.name }}'
-    state: 'absent'
-  with_items: '{{ sudo__specs }}'
+    path: "{{ sudo__confd_dir }}/{{ item.name }}"
+    state: "absent"
+  with_items: "{{ sudo__specs }}"
   when: ((item.name is defined and item.name|trim) and
          (item.disabled is defined and item.disabled|bool))
-  tags: [ 'configure' ]
+  tags: [ "configure" ]
 
-- include: 'configure/rename_unmanaged_specs.yml'
+- include: "configure/rename_unmanaged_specs.yml"
   when: ((sudo__specs_rename_unmanaged|bool) and
          (sudo__specs_rename_prefix|trim or sudo__specs_rename_suffix|trim))
 
-- include: 'configure/purge_unmanaged_specs.yml'
+- include: "configure/purge_unmanaged_specs.yml"
   when: (sudo__specs_purge_unmanaged|bool)
 
 - name: Configure - Update defaults and aliases in sudoers file
   template:
-    src: 'sudoers.j2'
-    dest: '{{ sudo__conf_file }}'
-    owner: 'root'
-    group: 'root'
+    src: "sudoers.j2"
+    dest: "{{ sudo__conf_file }}"
+    owner: "root"
+    group: "root"
     mode: 0440
-    validate: 'visudo -cf %s'
-  tags: [ 'configure' ]
+    validate: "visudo -cf %s"
+  tags: [ "configure" ]

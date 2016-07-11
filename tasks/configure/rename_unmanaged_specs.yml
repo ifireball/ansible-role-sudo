@@ -1,25 +1,25 @@
 ---
 - name: Configure - Create list of existing sudo specifications files
-  shell: 'ls -1 "{{ sudo__confd_dir }}" || true'
+  shell: "ls -1 {{ sudo__confd_dir|quote }} || true"
   register: sudo__register_confd_present
   changed_when: false
   always_run: true
-  tags: [ 'configure' ]
+  tags: [ "configure" ]
 
 - name: Configure - Create list of managed sudo specifications files
   set_fact:
-    sudo__register_confd_managed: '{{ sudo__specs|map(attribute="name")|list }}'
+    sudo__register_confd_managed: "{{ sudo__specs|map(attribute='name')|list }}"
   changed_when: false
   always_run: true
-  tags: [ 'configure' ]
+  tags: [ "configure" ]
 
 - name: Configure - Rename unmanaged sudo specifications files
-  command: 'mv "{{ sudo__confd_dir }}/{{ item }}" "{{ sudo__confd_dir }}/{{ sudo__specs_rename_prefix }}{{ item }}{{ sudo__specs_rename_suffix }}"'
+  command: "mv '{{ sudo__confd_dir }}/{{ item }}' '{{ sudo__confd_dir }}/{{ sudo__specs_rename_prefix }}{{ item }}{{ sudo__specs_rename_suffix }}'"
   args:
-    creates: '{{ sudo__confd_dir }}/{{ sudo__specs_rename_prefix }}{{ item }}{{ sudo__specs_rename_suffix }}'
-    removes: '{{ sudo__confd_dir }}/{{ item }}'
-  with_items: '{{ sudo__register_confd_present.stdout_lines }}'
+    creates: "{{ sudo__confd_dir }}/{{ sudo__specs_rename_prefix }}{{ item }}{{ sudo__specs_rename_suffix }}"
+    removes: "{{ sudo__confd_dir }}/{{ item }}"
+  with_items: "{{ sudo__register_confd_present.stdout_lines }}"
   when: ((item not in sudo__register_confd_managed) and
          ((not sudo__specs_rename_prefix|trim or not item.startswith(sudo__specs_rename_prefix)) or
           (not sudo__specs_rename_suffix|trim or not item.endswith(sudo__specs_rename_suffix))))
-  tags: [ 'configure' ]
+  tags: [ "configure" ]

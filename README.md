@@ -102,22 +102,22 @@ sudo__specs: []
 sudo__specs_rename_unmanaged: false
 
 # prefix to prepend to filenames of files located in sudo configuration dropins directory not created by this role
-sudo__specs_rename_prefix: ''
+sudo__specs_rename_prefix: ""
 
 # suffix to append to filenames of files located in sudo configuration dropins directory not created by this role
-sudo__specs_rename_suffix: ''
+sudo__specs_rename_suffix: ""
 
 # if set to true all files located in sudo configuration dropins directory not created by this role are removed
 sudo__specs_purge_unmanaged: false
-
-## OPTIONAL: list of sudo packages, defaults to OS specific value
-# sudo__packages: string | [ string ]
 
 ## OPTIONAL: path to sudo I/O log directory, defaults to OS specific value
 # sudo__iolog_dir: string
 
 ## OPTIONAL: filename pattern for sudo I/O log files, defaults to OS specific value
 # sudo__iolog_filename: string
+
+## OPTIONAL: list of sudo packages, defaults to OS specific value
+# sudo__packages: string | [ string ]
 ```
 
 Dependencies
@@ -131,19 +131,19 @@ Example Playbook
 ```yaml
 - hosts: all
   roles:
-    - role: 'tomashavlas.sudo'
+    - role: "tomashavlas.sudo"
       sudo__defaults:
-        - name: 'env_reset'
-        - name: '!visiblepw'
-        - name: 'secure_path'
-          value: '/sbin:/bin:/usr/sbin:/usr/bin'
+        - name: "env_reset"
+        - name: "!visiblepw"
+        - name: "secure_path"
+          value: "/sbin:/bin:/usr/sbin:/usr/bin"
       sudo__specs:
-        - name: 'wheel'
+        - name: "wheel"
           specs:
-            - user: '%wheel'
-              host: 'ALL'
-              operator: 'ALL'
-              command: 'ALL'
+            - user: "%wheel"
+              host: "ALL"
+              operator: "ALL"
+              command: "ALL"
 ```
 
 For more examples see [test cases](https://github.com/tomashavlas/ansible-role-sudo/tree/master/tests).
@@ -164,3 +164,4 @@ Created by [Tomáš Havlas](https://github.com/tomashavlas) in 2016.
 [tag_link]: https://github.com/tomashavlas/ansible-role-sudo/tags
 [travis_image]: https://travis-ci.org/tomashavlas/ansible-role-sudo.svg?branch=master
 [travis_link]: https://travis-ci.org/tomashavlas/ansible-role-sudo/
+''

@@ -2,330 +2,330 @@
 - name: Pre-Test Scenario 1.0 - Initialize Docker containers
   hosts: localhost
   roles:
-    - role: 'tomashavlas.provision_docker'
+    - role: "tomashavlas.provision_docker"
       provision_docker__inventory:
-        - name: 'test_sudo_01_centos7'
-          image: 'tomashavlas/ansible-test:centos7'
+        - name: "test_sudo_01_centos7"
+          image: "tomashavlas/ansible-test:centos7"
           volumes:
-            - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
-        - name: 'test_sudo_01_debian8'
-          image: 'tomashavlas/ansible-test:debian8'
+            - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+        - name: "test_sudo_01_debian8"
+          image: "tomashavlas/ansible-test:debian8"
           volumes:
-            - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
+            - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
   post_tasks:
     - name: Wait for SSH connection to Docker containers
       wait_for:
-        host: '{{ hostvars[item.name]["ansible_ssh_host"] }}'
+        host: "{{ hostvars[item.name]['ansible_ssh_host'] }}"
         port: 22
         timeout: 30
         connect_timeout: 30
-      with_items: '{{ provision_docker__inventory }}'
-  tags: [ 'initialize-docker' ]
+      with_items: "{{ provision_docker__inventory }}"
+  tags: [ "initialize-docker" ]
 
 - name: Test Scenario 1.1 - Basic role functionality
   hosts: provision_docker__containers
-  remote_user: 'root'
+  remote_user: "root"
   pre_tasks:
     - name: Pre-Test - Include OS specific variables
-      include_vars: '../vars/{{ ansible_os_family }}.yml'
-      tags: [ 'always' ]
+      include_vars: "../vars/{{ ansible_os_family }}.yml"
+      tags: [ "always" ]
     - name: Pre-Test - Create configuration drop-ins directory
       file:
-        path: '{{ sudo__confd_dir }}'
-        state: 'directory'
+        path: "{{ sudo__confd_dir }}"
+        state: "directory"
       changed_when: false
-      tags: [ 'pre-test' ]
+      tags: [ "pre-test" ]
     - name: Pre-Test - Create test file
       copy:
-        dest: '{{ sudo__confd_dir }}/s1_sample_specs'
-        src: 'files/sample_specs'
-        owner: 'root'
-        group: 'root'
+        dest: "{{ sudo__confd_dir }}/s1_sample_specs"
+        src: "files/sample_specs"
+        owner: "root"
+        group: "root"
         mode: 0440
       changed_when: false
-      tags: [ 'pre-test' ]
+      tags: [ "pre-test" ]
   post_tasks:
     - name: Acceptance Test - Copy acceptance test files into Docker containers
       copy:
-        src: 'files/acceptance/'
-        dest: '/tmp/acceptance/'
-        owner: 'root'
-        group: 'root'
+        src: "files/acceptance/"
+        dest: "/tmp/acceptance/"
+        owner: "root"
+        group: "root"
         mode: 0440
         directory_mode: 0550
       changed_when: false
-      tags: [ 'acceptance-test' ]
+      tags: [ "acceptance-test" ]
     - name: Acceptance Test - Verify global defaults and aliases
-      shell: 'bash -c "diff <(tail -n +2 {{ sudo__conf_file }}) <(tail -n +2 /tmp/acceptance/01/s1_sudoers)"'
+      shell: "bash -c 'diff <(tail -n +2 {{ sudo__conf_file }}) <(tail -n +2 /tmp/acceptance/01/s1_sudoers)'"
       changed_when: false
-      tags: [ 'acceptance-test' ]
+      tags: [ "acceptance-test" ]
     - name: Acceptance Test - Verify single value specifications
-      shell: 'bash -c "diff <(tail -n +2 {{ sudo__confd_dir }}/s1_specs_simple) <(tail -n +2 /tmp/acceptance/01/s1_specs_simple)"'
+      shell: "bash -c 'diff <(tail -n +2 {{ sudo__confd_dir }}/s1_specs_simple) <(tail -n +2 /tmp/acceptance/01/s1_specs_simple)'"
       changed_when: false
-      tags: [ 'acceptance-test' ]
+      tags: [ "acceptance-test" ]
     - name: Acceptance Test - Verify multiple value specifications
-      shell: 'bash -c "diff <(tail -n +2 {{ sudo__confd_dir }}/s1_specs_multivalue) <(tail -n +2 /tmp/acceptance/01/s1_specs_multivalue)"'
+      shell: "bash -c 'diff <(tail -n +2 {{ sudo__confd_dir }}/s1_specs_multivalue) <(tail -n +2 /tmp/acceptance/01/s1_specs_multivalue)'"
       changed_when: false
-      tags: [ 'acceptance-test' ]
+      tags: [ "acceptance-test" ]
     - name: Acceptance Test - Verify standalone defaults in specification file
-      shell: 'bash -c "diff <(tail -n +2 {{ sudo__confd_dir }}/s1_defaults_standalone) <(tail -n +2 /tmp/acceptance/01/s1_defaults_standalone)"'
+      shell: "bash -c 'diff <(tail -n +2 {{ sudo__confd_dir }}/s1_defaults_standalone) <(tail -n +2 /tmp/acceptance/01/s1_defaults_standalone)'"
       changed_when: false
-      tags: [ 'acceptance-test' ]
+      tags: [ "acceptance-test" ]
     - name: Acceptance Test - Verify defaults mixed with specifications
-      shell: 'bash -c "diff <(tail -n +2 {{ sudo__confd_dir }}/s1_specs_and_defaults) <(tail -n +2 /tmp/acceptance/01/s1_specs_and_defaults)"'
+      shell: "bash -c 'diff <(tail -n +2 {{ sudo__confd_dir }}/s1_specs_and_defaults) <(tail -n +2 /tmp/acceptance/01/s1_specs_and_defaults)'"
       changed_when: false
-      tags: [ 'acceptance-test' ]
+      tags: [ "acceptance-test" ]
     - name: Acceptance Test - Verify empty specification
       file:
-        path: '{{ sudo__confd_dir }}/s1_empty_file'
-        state: 'absent'
+        path: "{{ sudo__confd_dir }}/s1_empty_file"
+        state: "absent"
       changed_when: false
-      tags: [ 'acceptance-test' ]
+      tags: [ "acceptance-test" ]
     - name: Acceptance Test - Verify disabled specification
       file:
-        path: '{{ sudo__confd_dir }}/s1_defaults_disabled'
-        state: 'absent'
+        path: "{{ sudo__confd_dir }}/s1_defaults_disabled"
+        state: "absent"
       changed_when: false
-      tags: [ 'acceptance-test' ]
+      tags: [ "acceptance-test" ]
     - name: Acceptance Test - Verify not disabled specification
-      shell: 'bash -c "diff <(tail -n +2 {{ sudo__confd_dir }}/s1_defaults_not_disabled) <(tail -n +2 /tmp/acceptance/01/s1_defaults_not_disabled)"'
+      shell: "bash -c 'diff <(tail -n +2 {{ sudo__confd_dir }}/s1_defaults_not_disabled) <(tail -n +2 /tmp/acceptance/01/s1_defaults_not_disabled)'"
       changed_when: false
-      tags: [ 'acceptance-test' ]
+      tags: [ "acceptance-test" ]
     - name: Acceptance Test - Verify example playbook specification
-      shell: 'bash -c "diff <(tail -n +2 {{ sudo__confd_dir }}/s1_specs_example_playbook) <(tail -n +2 /tmp/acceptance/01/s1_specs_example_playbook)"'
+      shell: "bash -c 'diff <(tail -n +2 {{ sudo__confd_dir }}/s1_specs_example_playbook) <(tail -n +2 /tmp/acceptance/01/s1_specs_example_playbook)'"
       changed_when: false
-      tags: [ 'acceptance-test' ]
+      tags: [ "acceptance-test" ]
   roles:
-      - role: 'tomashavlas.sudo'
+      - role: "tomashavlas.sudo"
 # test defaults
         sudo__defaults:
 ## test boolean default
-          - name: 'env_reset'
+          - name: "env_reset"
 ## test negated boolean default
-          - name: '!visiblepw'
+          - name: "!visiblepw"
 ## test single string value default
-          - name: 'secure_path'
-            value: '/sbin:/bin:/usr/sbin:/usr/bin'
+          - name: "secure_path"
+            value: "/sbin:/bin:/usr/sbin:/usr/bin"
 ## test single int value default
-          - name: 'timestamp_timeout'
+          - name: "timestamp_timeout"
             value: 30
 ## test single string value default with spaces
-          - name: 'env_keep'
-            value: '"LANGUAGE LINGUAS"'
+          - name: "env_keep"
+            value: "\"LANGUAGE LINGUAS\""
 ## test multiple value default
-          - name: 'env_keep'
+          - name: "env_keep"
             value:
-              - 'LANG'
-              - 'LC_ALL'
+              - "LANG"
+              - "LC_ALL"
 ## test single value default exclude
-          - name: 'env_keep'
-            value: 'LC_IDENTIFICATION'
+          - name: "env_keep"
+            value: "LC_IDENTIFICATION"
             exclude: true
 ## test multiple value default exclude
-          - name: 'env_keep'
+          - name: "env_keep"
             value:
-              - 'LC_MEASUREMENT'
-              - 'LC_MONETARY'
+              - "LC_MEASUREMENT"
+              - "LC_MONETARY"
             exclude: true
 ## test single value default include
-          - name: 'env_keep'
-            value: 'LC_TIME'
+          - name: "env_keep"
+            value: "LC_TIME"
             include: true
 ## test multiple value default include
-          - name: 'env_keep'
+          - name: "env_keep"
             value:
-              - 'LANGUAGE'
-              - 'LINGUAS'
+              - "LANGUAGE"
+              - "LINGUAS"
             include: true
 ## test multiple value default with single value
-          - name: 'timestamp_timeout'
+          - name: "timestamp_timeout"
             value:
               - 30
 ## test empty value default
-          - name: 'authenticate'
-            value: ''
+          - name: "authenticate"
+            value: ""
 ## test empty list value default
-          - name: '!insults'
+          - name: "!insults"
             value: []
 ## test value default exclude and include
-          - name: 'env_keep'
-            value: 'LC_COLLATE'
+          - name: "env_keep"
+            value: "LC_COLLATE"
             exclude: true
             include: true
 # test aliases
         sudo__cmnd_aliases:
 ## test single command alias
-          - name: 'CMND_TEST'
-            command: '/bin/test'
+          - name: "CMND_TEST"
+            command: "/bin/test"
 ## test multiple command alias
-          - name: 'CMND_TEST_MULTIPLE'
+          - name: "CMND_TEST_MULTIPLE"
             command:
-              - '/bin/test1'
-              - '/bin/test2'
-              - '/bin/test3'
-              - 'CMND_TEST'
+              - "/bin/test1"
+              - "/bin/test2"
+              - "/bin/test3"
+              - "CMND_TEST"
         sudo__host_aliases:
 ## test single host alias
-          - name: 'HOST_TEST'
-            host: 'test'
+          - name: "HOST_TEST"
+            host: "test"
 ## test multiple host alias
-          - name: 'HOST_TEST_MULTIPLE'
+          - name: "HOST_TEST_MULTIPLE"
             host:
-              - 'test1'
-              - '127.0.0.2'
-              - '127.0.0.0/24'
-              - '127.0.0.0/255.255.255.0'
-              - 'HOST_TEST'
+              - "test1"
+              - "127.0.0.2"
+              - "127.0.0.0/24"
+              - "127.0.0.0/255.255.255.0"
+              - "HOST_TEST"
         sudo__runas_aliases:
 ## test single runas alias
-          - name: 'RUNAS_TEST'
-            operator: 'test'
+          - name: "RUNAS_TEST"
+            operator: "test"
 ## test multiple runas alias
-          - name: 'RUNAS_TEST_MULTIPLE'
+          - name: "RUNAS_TEST_MULTIPLE"
             operator:
-              - 'test1'
-              - 'test2'
-              - 'test3'
-              - 'RUNAS_TEST'
+              - "test1"
+              - "test2"
+              - "test3"
+              - "RUNAS_TEST"
         sudo__user_aliases:
 ## test single user alias
-          - name: 'USER_TEST'
-            user: 'test'
+          - name: "USER_TEST"
+            user: "test"
 ## test multiple user alias
-          - name: 'USER_TEST_MULTIPLE'
+          - name: "USER_TEST_MULTIPLE"
             user:
-              - 'test1'
-              - 'test2'
-              - 'test3'
-              - 'USER_TEST'
+              - "test1"
+              - "test2"
+              - "test3"
+              - "USER_TEST"
         sudo__specs:
 # test single value specifications
-          - name: 's1_specs_simple'
+          - name: "s1_specs_simple"
             specs:
 ## test with all values set
-              - user: 'tuser'
-                host: 'thost'
-                operator: 'toperator'
-                tag: 'NOPASSWD'
-                command: 'ALL'
+              - user: "tuser"
+                host: "thost"
+                operator: "toperator"
+                tag: "NOPASSWD"
+                command: "ALL"
 ## test with only required values set
-              - user: 'tuser'
-                host: 'thost'
-                command: '/bin/test'
+              - user: "tuser"
+                host: "thost"
+                command: "/bin/test"
 ## test with required values and optional tag value set
-              - user: 'tuser'
-                host: 'thost'
-                tag: 'NOPASSWD'
-                command: '/bin/test'
+              - user: "tuser"
+                host: "thost"
+                tag: "NOPASSWD"
+                command: "/bin/test"
 ## test with required values and optional operator value set
-              - user: 'tuser'
-                host: 'thost'
-                operator: 'toperator'
-                command: '/bin/test'
+              - user: "tuser"
+                host: "thost"
+                operator: "toperator"
+                command: "/bin/test"
 # test multiple values specifications
-          - name: 's1_specs_multivalue'
+          - name: "s1_specs_multivalue"
             specs:
               - user:
-                  - 'tuser1'
-                  - 'tuser2'
-                  - 'tuser3'
+                  - "tuser1"
+                  - "tuser2"
+                  - "tuser3"
                 host:
-                  - 'thost1'
-                  - 'thost2'
-                  - 'thost3'
+                  - "thost1"
+                  - "thost2"
+                  - "thost3"
                 operator:
-                  - 'toperator1'
-                  - 'toperator2'
-                  - 'toperator3'
+                  - "toperator1"
+                  - "toperator2"
+                  - "toperator3"
                 tag:
-                  - 'NOPASSWD'
-                  - 'NOEXEC'
+                  - "NOPASSWD"
+                  - "NOEXEC"
                 command:
-                  - '/bin/test1'
-                  - '/bin/test2'
-                  - '/bin/test3'
+                  - "/bin/test1"
+                  - "/bin/test2"
+                  - "/bin/test3"
 # test standalone defaults in specification file
-          - name: 's1_defaults_standalone'
+          - name: "s1_defaults_standalone"
             defaults:
 ## test global boolean default
-              - name: 'compress_io'
+              - name: "compress_io"
 ## test global string value default
-              - name: 'iolog_dir'
-                value: '{{ sudo__iolog_dir }}'
+              - name: "iolog_dir"
+                value: "{{ sudo__iolog_dir }}"
 ## test user/host/operator/command limited boolean default
-              - name: '!authenticate'
-                user: 'tuser'
-                host: 'thost'
-                operator: 'toperator'
-                command: '/bin/test'
+              - name: "!authenticate"
+                user: "tuser"
+                host: "thost"
+                operator: "toperator"
+                command: "/bin/test"
 ## test user/host/operator/command limited int default
-              - name: 'timestamp_timeout'
-                users: 'tuser'
-                hosts: 'thost'
-                operator: 'toperator'
-                command: '/bin/test'
+              - name: "timestamp_timeout"
+                users: "tuser"
+                hosts: "thost"
+                operator: "toperator"
+                command: "/bin/test"
                 value: 30
 ## test multiple user/host/operator/command limited boolean default
-              - name: 'insults'
+              - name: "insults"
                 user:
-                  - 'tuser1'
-                  - 'tuser2'
-                  - 'tuser3'
+                  - "tuser1"
+                  - "tuser2"
+                  - "tuser3"
                 host:
-                  - 'thost1'
-                  - 'thost2'
-                  - 'thost3'
+                  - "thost1"
+                  - "thost2"
+                  - "thost3"
                 operator:
-                  - 'toperator1'
-                  - 'toperator2'
-                  - 'toperator3'
+                  - "toperator1"
+                  - "toperator2"
+                  - "toperator3"
                 command:
-                  - '/bin/test1'
-                  - '/bin/test2'
-                  - '/bin/test3'
+                  - "/bin/test1"
+                  - "/bin/test2"
+                  - "/bin/test3"
 ## test user limited boolean default
-              - name: '!visiblepw'
-                user: 'tuser'
+              - name: "!visiblepw"
+                user: "tuser"
 ## test host limited boolean default
-              - name: '!visiblepw'
-                host: 'thost'
+              - name: "!visiblepw"
+                host: "thost"
 ## test operator limited boolean default
-              - name: '!visiblepw'
-                operator: 'toperator'
+              - name: "!visiblepw"
+                operator: "toperator"
 ## test command limited boolean default
-              - name: '!visiblepw'
-                command: '/bin/test'
+              - name: "!visiblepw"
+                command: "/bin/test"
 # test defaults mixed with specifications
-          - name: 's1_specs_and_defaults'
+          - name: "s1_specs_and_defaults"
             defaults:
-              - name: '!authenticate'
-                user: 'tuser'
-                host: 'thost'
-                operator: 'toperator'
-                command: '/bin/test'
-              - name: '!visiblepw'
+              - name: "!authenticate"
+                user: "tuser"
+                host: "thost"
+                operator: "toperator"
+                command: "/bin/test"
+              - name: "!visiblepw"
             specs:
-              - user: 'tuser'
-                host: 'thost'
-                operator: 'toperator'
-                tag: 'NOPASSWD'
-                command: 'ALL'
+              - user: "tuser"
+                host: "thost"
+                operator: "toperator"
+                tag: "NOPASSWD"
+                command: "ALL"
 # test empty specification
-          - name: 's1_empty_file'
+          - name: "s1_empty_file"
 # test disabled specification
-          - name: 's1_defaults_disabled'
+          - name: "s1_defaults_disabled"
             disabled: true
             defaults:
-              - name: '!visiblepw'
+              - name: "!visiblepw"
 # test not disabled specification
-          - name: 's1_defaults_not_disabled'
+          - name: "s1_defaults_not_disabled"
             disabled: false
             defaults:
-              - name: '!visiblepw'
+              - name: "!visiblepw"
 # test example playbook specification
-          - name: 's1_specs_example_playbook'
+          - name: "s1_specs_example_playbook"
             specs:
-              - user: '%wheel'
-                host: 'ALL'
-                operator: 'ALL'
-                command: 'ALL'
+              - user: "%wheel"
+                host: "ALL"
+                operator: "ALL"
+                command: "ALL"
