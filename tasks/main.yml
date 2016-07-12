@@ -1,4 +1,7 @@
 ---
-- include: "init.yml"
-- include: "setup.yml"
-- include: "configure.yml"
+- name: Initialize - Include OS specific variables
+  include_vars: "os/{{ ansible_os_family }}.yml"
+  tags: [ "always" ]
+
+- include: "setup/main.yml"
+- include: "configure/main.yml"

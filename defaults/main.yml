@@ -92,10 +92,10 @@ sudo__specs_rename_suffix: ""
 sudo__specs_purge_unmanaged: false
 
 ## OPTIONAL: path to sudo I/O log directory, defaults to OS specific value
-# sudo__iolog_dir: string
+sudo__iolog_dir: '{{ __sudo__iolog_dir }}'
 
 ## OPTIONAL: filename pattern for sudo I/O log files, defaults to OS specific value
-# sudo__iolog_filename: string
+sudo__iolog_filename: '{{ __sudo__iolog_filename }}'
 
 ## OPTIONAL: list of sudo packages, defaults to OS specific value
-# sudo__packages: string | [ string ]
+sudo__packages: '{{ __sudo__packages }}'

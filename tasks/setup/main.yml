@@ -1,8 +1,8 @@
 ---
-- include: "setup/Debian.yml"
+- include: "os/Debian.yml"
   when: ansible_os_family == "Debian"
 
-- include: "setup/RedHat.yml"
+- include: "os/RedHat.yml"
   when: ansible_os_family == "RedHat"
 
 - name: Setup - Create configuration drop-ins directory

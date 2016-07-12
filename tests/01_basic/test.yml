@@ -27,7 +27,7 @@
   remote_user: "root"
   pre_tasks:
     - name: Pre-Test - Include OS specific variables
-      include_vars: "../../vars/{{ ansible_os_family }}.yml"
+      include_vars: "../../vars/os/{{ ansible_os_family }}.yml"
       tags: [ "always" ]
     - name: Pre-Test - Create configuration drop-ins directory
       file:
@@ -45,16 +45,6 @@
       changed_when: false
       tags: [ "pre-test" ]
   post_tasks:
-    - name: Acceptance Test - Copy acceptance test files into Docker containers
-      copy:
-        src: "files/acceptance/"
-        dest: "/tmp/acceptance/"
-        owner: "root"
-        group: "root"
-        mode: 0440
-        directory_mode: 0550
-      changed_when: false
-      tags: [ "acceptance-test" ]
     - name: Acceptance Test - Verify global defaults and aliases
       copy:
         dest: "{{ sudo__conf_file }}"
