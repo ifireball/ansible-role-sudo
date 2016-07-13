@@ -1,8 +1,8 @@
 ---
 - name: Configure - Update sudo specifications files
   template:
-    src: "sudoers_spec.j2"
     dest: "{{ sudo__confd_dir }}/{{ item.name }}"
+    src: "etc/sudoers.d/specs.j2"
     owner: "root"
     group: "root"
     mode: 0440
@@ -29,8 +29,8 @@
 
 - name: Configure - Update defaults and aliases in sudoers file
   template:
-    src: "sudoers.j2"
     dest: "{{ sudo__conf_file }}"
+    src: "etc/sudoers.j2"
     owner: "root"
     group: "root"
     mode: 0440
