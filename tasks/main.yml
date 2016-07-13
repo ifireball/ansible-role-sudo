@@ -3,5 +3,10 @@
   include_vars: "os/{{ ansible_os_family }}.yml"
   tags: [ "always" ]
 
-- include: "setup/main.yml"
-- include: "configure/main.yml"
+- name: Setup sudo
+  include: "setup/main.yml"
+  tags: [ "setup" ]
+
+- name: Configure sudo
+  include: "configure/main.yml"
+  tags: [ "configure" ]
