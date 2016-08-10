@@ -35,3 +35,5 @@
     group: "root"
     mode: 0440
     validate: "visudo -cf %s"
+  when: sudo__defaults or sudo__host_aliases or sudo__user_aliases or
+        sudo__cmnd_aliases or sudo__runas_aliases
